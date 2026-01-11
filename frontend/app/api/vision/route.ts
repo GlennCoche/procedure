@@ -3,9 +3,14 @@ import { getCurrentUser } from '@/lib/auth'
 import { db } from '@/lib/db'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Créer le client OpenAI de manière lazy pour éviter les erreurs au build
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not configured')
+  }
+  return new OpenAI({ apiKey })
+}
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser()
@@ -27,6 +32,7 @@ export async function POST(request: NextRequest) {
     const base64 = buffer.toString('base64')
 
     // Appeler OpenAI Vision
+    const openai = getOpenAIClient()
     const response = await openai.chat.completions.create({
       model: 'gpt-4o',
       messages: [

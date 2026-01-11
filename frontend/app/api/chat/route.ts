@@ -3,9 +3,14 @@ import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/auth'
 import OpenAI from 'openai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Créer le client OpenAI de manière lazy pour éviter les erreurs au build
+function getOpenAIClient() {
+  const apiKey = process.env.OPENAI_API_KEY
+  if (!apiKey) {
+    throw new Error('OPENAI_API_KEY is not configured')
+  }
+  return new OpenAI({ apiKey })
+}
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser()
@@ -81,6 +86,7 @@ export async function POST(request: NextRequest) {
     })
 
     // Appeler OpenAI avec streaming
+    const openai = getOpenAIClient()
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
       messages,
