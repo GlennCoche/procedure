@@ -50,7 +50,9 @@ class FrontendLogger {
 
     // Logger dans la console
     if (this.logToConsole) {
-      const consoleMethod = entry.level === 'debug' ? 'log' : entry.level
+      const consoleMethod = entry.level === 'debug' ? 'log' 
+                          : entry.level === 'critical' ? 'error' 
+                          : entry.level
       const prefix = `[${entry.timestamp}] [${entry.level.toUpperCase()}]`
       if (entry.component) {
         console[consoleMethod](`${prefix} [${entry.component}]`, entry.message, entry.data || '')
