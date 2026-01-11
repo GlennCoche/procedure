@@ -55,10 +55,11 @@ const authOptions: NextAuthOptions = {
       return token
     },
     async session({ session, token }) {
-      if (token) {
-        (session as any).accessToken = (token as any).accessToken
-        (session as any).role = (token as any).role
-        (session as any).userId = token.sub
+      const tokenAny = token as any
+      if (tokenAny) {
+        (session as any).accessToken = tokenAny.accessToken
+        (session as any).role = tokenAny.role
+        (session as any).userId = tokenAny.sub
       }
       return session
     }
