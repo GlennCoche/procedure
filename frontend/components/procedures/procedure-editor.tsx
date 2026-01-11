@@ -185,7 +185,11 @@ export function ProcedureEditor({
               <Button
                 variant="destructive"
                 size="sm"
-                onClick={() => deleteNode(selectedStepId)}
+                onClick={() => {
+                  if (selectedStepId) {
+                    deleteNode(selectedStepId)
+                  }
+                }}
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
@@ -197,7 +201,11 @@ export function ProcedureEditor({
               <Input
                 id="step-title"
                 value={selectedStep.title}
-                onChange={(e) => updateStep(selectedStepId, "title", e.target.value)}
+                onChange={(e) => {
+                  if (selectedStepId) {
+                    updateStep(selectedStepId, "title", e.target.value)
+                  }
+                }}
                 placeholder="Titre de l'étape"
               />
             </div>
@@ -206,7 +214,11 @@ export function ProcedureEditor({
               <Input
                 id="step-description"
                 value={selectedStep.description}
-                onChange={(e) => updateStep(selectedStepId, "description", e.target.value)}
+                onChange={(e) => {
+                  if (selectedStepId) {
+                    updateStep(selectedStepId, "description", e.target.value)
+                  }
+                }}
                 placeholder="Description courte"
               />
             </div>
@@ -215,7 +227,11 @@ export function ProcedureEditor({
               <textarea
                 id="step-instructions"
                 value={selectedStep.instructions}
-                onChange={(e) => updateStep(selectedStepId, "instructions", e.target.value)}
+                onChange={(e) => {
+                  if (selectedStepId) {
+                    updateStep(selectedStepId, "instructions", e.target.value)
+                  }
+                }}
                 placeholder="Instructions détaillées pour cette étape"
                 className="flex min-h-[120px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
               />
