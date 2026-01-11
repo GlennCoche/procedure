@@ -1,0 +1,135 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite" // Dev: SQLite, Prod: PostgreSQL (Supabase) - Changez en "postgresql" pour Supabase
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int      @id @default(autoincrement())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  role         String   @default("technician")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
+
+  procedures   Procedure[]   @relation("CreatedBy")
+  executions   Execution[]
+  chatMessages ChatMessage[]
+  tips         Tip[]
+
+  @@map("users")
+}
+
+model Procedure {
+  id            Int      @id @default(autoincrement())
+  title         String
+  description   String?
+  category      String?
+  tags          String? // JSON string
+  createdById   Int      @map("created_by")
+  version       Int      @default(1)
+  flowchartData String?  @map("flowchart_data") // JSON string
+  isActive      Int      @default(1) @map("is_active") // SQLite: 0 ou 1
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
+
+  createdBy  User        @relation("CreatedBy", fields: [createdById], references: [id])
+  steps      Step[]
+  executions Execution[]
+
+  @@index([isActive])
+  @@index([category])
+  @@map("procedures")
+}
+
+model Step {
+  id             Int      @id @default(autoincrement())
+  procedureId    Int      @map("procedure_id")
+  order          Int
+  title          String
+  description    String?
+  instructions   String?
+  photos         String? // JSON string
+  files          String? // JSON string
+  validationType String?  @default("manual") @map("validation_type")
+  createdAt      DateTime @default(now()) @map("created_at")
+
+  procedure      Procedure       @relation(fields: [procedureId], references: [id], onDelete: Cascade)
+  stepExecutions StepExecution[]
+
+  @@index([procedureId])
+  @@map("steps")
+}
+
+model Execution {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @map("user_id")
+  procedureId Int       @map("procedure_id")
+  status      String    @default("in_progress")
+  currentStep Int?      @map("current_step")
+  startedAt   DateTime  @default(now()) @map("started_at")
+  completedAt DateTime? @map("completed_at")
+
+  user           User            @relation(fields: [userId], references: [id])
+  procedure      Procedure       @relation(fields: [procedureId], references: [id])
+  stepExecutions StepExecution[]
+
+  @@index([userId])
+  @@index([procedureId])
+  @@map("executions")
+}
+
+model StepExecution {
+  id          Int       @id @default(autoincrement())
+  executionId Int       @map("execution_id")
+  stepId      Int       @map("step_id")
+  status      String    @default("pending")
+  photos      String? // JSON string
+  comments    String?
+  completedAt DateTime? @map("completed_at")
+
+  execution Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  step      Step      @relation(fields: [stepId], references: [id])
+
+  @@unique([executionId, stepId])
+  @@index([executionId])
+  @@index([stepId])
+  @@map("step_executions")
+}
+
+model Tip {
+  id          Int      @id @default(autoincrement())
+  title       String
+  content     String
+  category    String?
+  tags        String? // JSON string
+  createdById Int      @map("created_by")
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  createdBy User @relation(fields: [createdById], references: [id])
+
+  @@index([category])
+  @@map("tips")
+}
+
+model ChatMessage {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @map("user_id")
+  message   String
+  response  String?
+  context   String? // JSON string
+  createdAt DateTime @default(now()) @map("created_at")
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("chat_messages")
+}

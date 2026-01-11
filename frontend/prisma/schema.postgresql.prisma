@@ -1,0 +1,135 @@
+// Schéma Prisma pour PostgreSQL (Supabase)
+// Copiez ce contenu dans schema.prisma avant de déployer sur Supabase
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           Int       @id @default(autoincrement())
+  email        String    @unique @db.VarChar(255)
+  passwordHash String    @map("password_hash") @db.VarChar(255)
+  role         String    @default("technician") @db.VarChar(50)
+  createdAt    DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt    DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  procedures   Procedure[] @relation("CreatedBy")
+  executions   Execution[]
+  chatMessages ChatMessage[]
+  tips         Tip[]
+
+  @@map("users")
+}
+
+model Procedure {
+  id            Int       @id @default(autoincrement())
+  title         String    @db.VarChar(255)
+  description   String?   @db.Text
+  category      String?   @db.VarChar(100)
+  tags          String?   @db.Text // JSON string
+  createdById   Int       @map("created_by")
+  version       Int       @default(1)
+  flowchartData String?   @map("flowchart_data") @db.Text // JSON string
+  isActive      Boolean   @default(true) @map("is_active")
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime  @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  createdBy     User        @relation("CreatedBy", fields: [createdById], references: [id])
+  steps         Step[]
+  executions    Execution[]
+
+  @@index([isActive])
+  @@index([category])
+  @@map("procedures")
+}
+
+model Step {
+  id            Int       @id @default(autoincrement())
+  procedureId   Int       @map("procedure_id")
+  order         Int
+  title         String    @db.VarChar(255)
+  description   String?   @db.Text
+  instructions  String?   @db.Text
+  photos        String?   @db.Text // JSON string
+  files         String?   @db.Text // JSON string
+  validationType String?  @default("manual") @map("validation_type") @db.VarChar(50)
+  createdAt     DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  procedure     Procedure @relation(fields: [procedureId], references: [id], onDelete: Cascade)
+  stepExecutions StepExecution[]
+
+  @@index([procedureId])
+  @@map("steps")
+}
+
+model Execution {
+  id          Int       @id @default(autoincrement())
+  userId      Int       @map("user_id")
+  procedureId Int       @map("procedure_id")
+  status      String    @default("in_progress") @db.VarChar(50)
+  currentStep Int?      @map("current_step")
+  startedAt   DateTime  @default(now()) @map("started_at") @db.Timestamptz(6)
+  completedAt DateTime? @map("completed_at") @db.Timestamptz(6)
+
+  user        User      @relation(fields: [userId], references: [id])
+  procedure   Procedure @relation(fields: [procedureId], references: [id])
+  stepExecutions StepExecution[]
+
+  @@index([userId])
+  @@index([procedureId])
+  @@map("executions")
+}
+
+model StepExecution {
+  id          Int       @id @default(autoincrement())
+  executionId Int       @map("execution_id")
+  stepId      Int       @map("step_id")
+  status      String    @default("pending") @db.VarChar(50)
+  photos      String?   @db.Text // JSON string
+  comments    String?   @db.Text
+  completedAt DateTime? @map("completed_at") @db.Timestamptz(6)
+
+  execution   Execution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+  step        Step      @relation(fields: [stepId], references: [id])
+
+  @@unique([executionId, stepId])
+  @@index([executionId])
+  @@index([stepId])
+  @@map("step_executions")
+}
+
+model Tip {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  content   String   @db.Text
+  category  String?  @db.VarChar(100)
+  tags      String?  @db.Text // JSON string
+  createdById Int    @map("created_by")
+  createdAt DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  createdBy User    @relation(fields: [createdById], references: [id])
+
+  @@index([category])
+  @@map("tips")
+}
+
+model ChatMessage {
+  id        Int       @id @default(autoincrement())
+  userId    Int       @map("user_id")
+  message   String    @db.Text
+  response  String?   @db.Text
+  context   String?   @db.Text // JSON string
+  createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  user      User      @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+  @@index([createdAt])
+  @@map("chat_messages")
+}
