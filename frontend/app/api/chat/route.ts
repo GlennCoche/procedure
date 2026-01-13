@@ -2,7 +2,6 @@ import { NextRequest } from 'next/server'
 import { db } from '@/lib/db'
 import { getCurrentUser } from '@/lib/auth'
 import OpenAI from 'openai'
-import { Prisma } from '@prisma/client'
 
 // Créer le client OpenAI de manière lazy pour éviter les erreurs au build
 function getOpenAIClient() {
@@ -87,10 +86,10 @@ export async function POST(request: NextRequest) {
 
     // Construire le contexte depuis la base de données
     let contextInfo = ''
-    let foundProcedures: string[] = []
-    let foundTips: string[] = []
+    const foundProcedures: string[] = []
+    const foundTips: string[] = []
 
-    // Recherche vectorielle pour enrichir le contexte
+    // Recherche vectorielle pour enrichir le contexte (optionnelle)
     try {
       const openai = getOpenAIClient()
       const embeddingResponse = await openai.embeddings.create({
@@ -100,8 +99,7 @@ export async function POST(request: NextRequest) {
       const queryEmbedding = embeddingResponse.data[0].embedding
       const embeddingStr = '[' + queryEmbedding.join(',') + ']'
 
-      // Recherche vectorielle améliorée (seuil abaissé à 0.5, top_k augmenté à 10)
-      const escapedEmbedding = embeddingStr.replace(/'/g, "''")
+      // Recherche vectorielle avec Prisma.sql
       const vectorResults = await db.$queryRaw<Array<{
         id: number
         document_type: string
@@ -109,25 +107,23 @@ export async function POST(request: NextRequest) {
         content: string
         metadata: string | null
         similarity: number
-      }>>(
-        Prisma.raw(`
-          SELECT 
-            id,
-            document_type,
-            document_id,
-            content,
-            metadata,
-            1 - (embedding <=> '${escapedEmbedding}'::vector) as similarity
-          FROM document_embeddings
-          WHERE embedding IS NOT NULL
-          AND (1 - (embedding <=> '${escapedEmbedding}'::vector)) >= 0.5
-          ORDER BY similarity DESC
-          LIMIT 10
-        `)
-      )
+      }>>`
+        SELECT 
+          id,
+          document_type,
+          document_id,
+          content,
+          metadata,
+          1 - (embedding <=> ${embeddingStr}::vector) as similarity
+        FROM document_embeddings
+        WHERE embedding IS NOT NULL
+        AND (1 - (embedding <=> ${embeddingStr}::vector)) >= 0.5
+        ORDER BY similarity DESC
+        LIMIT 10
+      `
 
       // Enrichir le contexte avec les résultats de recherche
-      if (vectorResults.length > 0) {
+      if (vectorResults && vectorResults.length > 0) {
         contextInfo += '\n📖 DOCUMENTATION PERTINENTE TROUVÉE:\n'
         
         for (const result of vectorResults) {
@@ -147,6 +143,7 @@ export async function POST(request: NextRequest) {
         }
       }
     } catch (error) {
+      // La recherche vectorielle peut échouer si pgvector n'est pas installé
       console.warn('Recherche vectorielle non disponible:', error)
     }
 
