@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { comparePassword, createToken } from '@/lib/auth'
-import { cookies } from 'next/headers'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,9 +13,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Normaliser l'email en minuscules
+    const normalizedEmail = email.toLowerCase().trim()
+
     // Trouver l'utilisateur
     const user = await db.user.findUnique({
-      where: { email },
+      where: { email: normalizedEmail },
     })
 
     if (!user) {
@@ -39,7 +41,16 @@ export async function POST(request: NextRequest) {
     const token = createToken({ id: user.id, role: user.role })
 
     // Stocker dans un cookie HTTP-only (plus sécurisé que localStorage)
-    cookies().set('auth-token', token, {
+    // Utiliser Response.cookies() pour Next.js 15
+    const response = NextResponse.json({
+      user: {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+      },
+    })
+
+    response.cookies.set('auth-token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
       sameSite: 'lax',
@@ -47,17 +58,17 @@ export async function POST(request: NextRequest) {
       path: '/',
     })
 
-    return NextResponse.json({
-      user: {
-        id: user.id,
-        email: user.email,
-        role: user.role,
-      },
-    })
-  } catch (error) {
+    return response
+  } catch (error: any) {
     console.error('Erreur login:', error)
+    // Log plus détaillé pour le debugging
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
+    })
     return NextResponse.json(
-      { error: 'Erreur serveur' },
+      { error: 'Erreur serveur', details: process.env.NODE_ENV === 'development' ? error?.message : undefined },
       { status: 500 }
     )
   }

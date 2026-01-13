@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { db } from '@/lib/db'
 import { hashPassword, createToken } from '@/lib/auth'
-import { cookies } from 'next/headers'
 
 export async function POST(request: NextRequest) {
   try {
@@ -14,9 +13,12 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // Normaliser l'email en minuscules
+    const normalizedEmail = email.toLowerCase().trim()
+
     // Vérifier si l'email existe déjà
     const existingUser = await db.user.findUnique({
-      where: { email },
+      where: { email: normalizedEmail },
     })
 
     if (existingUser) {
@@ -32,7 +34,7 @@ export async function POST(request: NextRequest) {
     // Créer l'utilisateur
     const user = await db.user.create({
       data: {
-        email,
+        email: normalizedEmail,
         passwordHash,
         role: role || 'technician',
       },
@@ -47,15 +49,8 @@ export async function POST(request: NextRequest) {
     const token = createToken({ id: user.id, role: user.role })
 
     // Stocker dans un cookie HTTP-only
-    cookies().set('auth-token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
-      maxAge: 60 * 60 * 24 * 7, // 7 jours
-      path: '/',
-    })
-
-    return NextResponse.json(
+    // Utiliser Response.cookies() pour Next.js 15
+    const response = NextResponse.json(
       {
         user: {
           id: user.id,
@@ -65,10 +60,26 @@ export async function POST(request: NextRequest) {
       },
       { status: 201 }
     )
-  } catch (error) {
+
+    response.cookies.set('auth-token', token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'lax',
+      maxAge: 60 * 60 * 24 * 7, // 7 jours
+      path: '/',
+    })
+
+    return response
+  } catch (error: any) {
     console.error('Erreur register:', error)
+    // Log plus détaillé pour le debugging
+    console.error('Error details:', {
+      message: error?.message,
+      stack: error?.stack,
+      name: error?.name,
+    })
     return NextResponse.json(
-      { error: 'Erreur serveur' },
+      { error: 'Erreur serveur', details: process.env.NODE_ENV === 'development' ? error?.message : undefined },
       { status: 500 }
     )
   }
