@@ -11,8 +11,8 @@ export interface ChatContext {
 }
 
 export async function sendChatMessage(
-  message: string,
-  context?: ChatContext
+  _message: string,
+  _context?: ChatContext
 ): Promise<string> {
   // Note: Cette fonction n'est plus utilisée car on utilise le streaming
   // Gardée pour compatibilité
@@ -60,7 +60,7 @@ export async function sendChatMessageStream(
           if (parsed.content) {
             onChunk(parsed.content)
           }
-        } catch (e) {
+        } catch {
           // Ignore parse errors
         }
       }

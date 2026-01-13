@@ -8,7 +8,7 @@ interface LogEntry {
   timestamp: string
   level: LogLevel
   message: string
-  data?: any
+  data?: unknown
   stack?: string
   component?: string
   function?: string
@@ -20,7 +20,7 @@ class FrontendLogger {
   private logToConsole = true
   private logToServer = false
 
-  private formatMessage(level: LogLevel, message: string, data?: any, component?: string, func?: string): LogEntry {
+  private formatMessage(level: LogLevel, message: string, data?: unknown, component?: string, func?: string): LogEntry {
     const entry: LogEntry = {
       timestamp: new Date().toISOString(),
       level,
@@ -74,29 +74,29 @@ class FrontendLogger {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(entry),
       })
-    } catch (error) {
+    } catch {
       // Ne pas logger l'erreur de logging pour éviter les boucles
     }
   }
 
-  debug(message: string, data?: any, component?: string, func?: string) {
+  debug(message: string, data?: unknown, component?: string, func?: string) {
     this.addLog(this.formatMessage('debug', message, data, component, func))
   }
 
-  info(message: string, data?: any, component?: string, func?: string) {
+  info(message: string, data?: unknown, component?: string, func?: string) {
     this.addLog(this.formatMessage('info', message, data, component, func))
   }
 
-  warn(message: string, data?: any, component?: string, func?: string) {
+  warn(message: string, data?: unknown, component?: string, func?: string) {
     this.addLog(this.formatMessage('warn', message, data, component, func))
   }
 
-  error(message: string, error?: Error | any, component?: string, func?: string) {
-    this.addLog(this.formatMessage('error', message, error, component, func))
+  error(message: string, errorData?: Error | unknown, component?: string, func?: string) {
+    this.addLog(this.formatMessage('error', message, errorData, component, func))
   }
 
-  critical(message: string, error?: Error | any, component?: string, func?: string) {
-    this.addLog(this.formatMessage('critical', message, error, component, func))
+  critical(message: string, errorData?: Error | unknown, component?: string, func?: string) {
+    this.addLog(this.formatMessage('critical', message, errorData, component, func))
   }
 
   getLogs(level?: LogLevel, limit: number = 100): LogEntry[] {

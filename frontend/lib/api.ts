@@ -34,7 +34,7 @@ export async function apiRequest<T>(
   return response.json()
 }
 
-export async function apiPost<T>(endpoint: string, data: any): Promise<T> {
+export async function apiPost<T>(endpoint: string, data: unknown): Promise<T> {
   return apiRequest<T>(endpoint, {
     method: 'POST',
     body: JSON.stringify(data),
@@ -47,7 +47,7 @@ export async function apiGet<T>(endpoint: string): Promise<T> {
   })
 }
 
-export async function apiPut<T>(endpoint: string, data: any): Promise<T> {
+export async function apiPut<T>(endpoint: string, data: unknown): Promise<T> {
   return apiRequest<T>(endpoint, {
     method: 'PUT',
     body: JSON.stringify(data),
@@ -63,8 +63,8 @@ export async function apiDelete<T>(endpoint: string): Promise<T> {
 // Pour compatibilité avec l'ancien code
 export const apiClient = {
   get: (url: string) => apiGet(url.replace('/api', '')),
-  post: (url: string, data?: any) => apiPost(url.replace('/api', ''), data),
-  put: (url: string, data?: any) => apiPut(url.replace('/api', ''), data),
+  post: (url: string, data?: unknown) => apiPost(url.replace('/api', ''), data),
+  put: (url: string, data?: unknown) => apiPut(url.replace('/api', ''), data),
   delete: (url: string) => apiDelete(url.replace('/api', '')),
 }
 
