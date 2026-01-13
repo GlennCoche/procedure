@@ -97,13 +97,11 @@ export async function POST(request: NextRequest) {
         // Recherche dans les procédures
         const procedures = await db.procedure.findMany({
           where: {
-            OR: keywords.map((keyword: string) => ({
-              OR: [
-                { title: { contains: keyword, mode: 'insensitive' as const } },
-                { description: { contains: keyword, mode: 'insensitive' as const } },
-                { tags: { contains: keyword, mode: 'insensitive' as const } },
-              ]
-            }))
+            OR: keywords.flatMap((keyword: string) => [
+              { title: { contains: keyword, mode: 'insensitive' as const } },
+              { description: { contains: keyword, mode: 'insensitive' as const } },
+              { tags: { contains: keyword, mode: 'insensitive' as const } },
+            ])
           },
           include: { steps: { orderBy: { order: 'asc' } } },
           take: 5
@@ -124,13 +122,11 @@ export async function POST(request: NextRequest) {
         // Recherche dans les tips
         const tips = await db.tip.findMany({
           where: {
-            OR: keywords.map((keyword: string) => ({
-              OR: [
-                { title: { contains: keyword, mode: 'insensitive' as const } },
-                { content: { contains: keyword, mode: 'insensitive' as const } },
-                { tags: { contains: keyword, mode: 'insensitive' as const } },
-              ]
-            }))
+            OR: keywords.flatMap((keyword: string) => [
+              { title: { contains: keyword, mode: 'insensitive' as const } },
+              { content: { contains: keyword, mode: 'insensitive' as const } },
+              { tags: { contains: keyword, mode: 'insensitive' as const } },
+            ])
           },
           take: 5
         })
