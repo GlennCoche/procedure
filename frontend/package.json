@@ -9,6 +9,7 @@
     "server:stop": "../scripts/start-server.sh stop",
     "server:restart": "../scripts/start-server.sh restart",
     "server:status": "../scripts/start-server.sh status",
+    "prebuild": "rm -rf node_modules/.prisma .next",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
