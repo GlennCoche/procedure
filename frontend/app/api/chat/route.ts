@@ -89,122 +89,63 @@ export async function POST(request: NextRequest) {
     const foundProcedures: string[] = []
     const foundTips: string[] = []
 
-    // Recherche vectorielle pour enrichir le contexte (optionnelle)
+    // Recherche par mots-clés dans les procédures et tips
     try {
-      const openai = getOpenAIClient()
-      const embeddingResponse = await openai.embeddings.create({
-        model: 'text-embedding-3-small',
-        input: message.slice(0, 8000),
-      })
-      const queryEmbedding = embeddingResponse.data[0].embedding
-      const embeddingStr = '[' + queryEmbedding.join(',') + ']'
+      const keywords = message.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3).slice(0, 5)
+      
+      if (keywords.length > 0) {
+        // Recherche dans les procédures
+        const procedures = await db.procedure.findMany({
+          where: {
+            OR: keywords.map((keyword: string) => ({
+              OR: [
+                { title: { contains: keyword, mode: 'insensitive' as const } },
+                { description: { contains: keyword, mode: 'insensitive' as const } },
+                { tags: { contains: keyword, mode: 'insensitive' as const } },
+              ]
+            }))
+          },
+          include: { steps: { orderBy: { order: 'asc' } } },
+          take: 5
+        })
 
-      // Recherche vectorielle avec Prisma.sql
-      const vectorResults = await db.$queryRaw<Array<{
-        id: number
-        document_type: string
-        document_id: number
-        content: string
-        metadata: string | null
-        similarity: number
-      }>>`
-        SELECT 
-          id,
-          document_type,
-          document_id,
-          content,
-          metadata,
-          1 - (embedding <=> ${embeddingStr}::vector) as similarity
-        FROM document_embeddings
-        WHERE embedding IS NOT NULL
-        AND (1 - (embedding <=> ${embeddingStr}::vector)) >= 0.5
-        ORDER BY similarity DESC
-        LIMIT 10
-      `
+        if (procedures.length > 0) {
+          contextInfo += '\n📖 PROCÉDURES PERTINENTES:\n'
+          for (const proc of procedures) {
+            foundProcedures.push(proc.title)
+            contextInfo += `\n🔧 "${proc.title}"\n`
+            contextInfo += `   ${proc.description || ''}\n`
+            if (proc.steps.length > 0) {
+              contextInfo += `   Étapes: ${proc.steps.map(s => s.title).join(' → ')}\n`
+            }
+          }
+        }
 
-      // Enrichir le contexte avec les résultats de recherche
-      if (vectorResults && vectorResults.length > 0) {
-        contextInfo += '\n📖 DOCUMENTATION PERTINENTE TROUVÉE:\n'
-        
-        for (const result of vectorResults) {
-          const metadata = result.metadata ? JSON.parse(result.metadata) : {}
-          const title = metadata.title || `Document ${result.document_id}`
-          const similarity = Math.round(result.similarity * 100)
-          
-          if (result.document_type === 'procedure') {
-            foundProcedures.push(title)
-            contextInfo += `\n🔧 PROCÉDURE: "${title}" (pertinence: ${similarity}%)\n`
-            contextInfo += `   ${result.content.slice(0, 500)}\n`
-          } else if (result.document_type === 'tip') {
-            foundTips.push(title)
-            contextInfo += `\n💡 TIP: "${title}" (pertinence: ${similarity}%)\n`
-            contextInfo += `   ${result.content.slice(0, 300)}\n`
+        // Recherche dans les tips
+        const tips = await db.tip.findMany({
+          where: {
+            OR: keywords.map((keyword: string) => ({
+              OR: [
+                { title: { contains: keyword, mode: 'insensitive' as const } },
+                { content: { contains: keyword, mode: 'insensitive' as const } },
+                { tags: { contains: keyword, mode: 'insensitive' as const } },
+              ]
+            }))
+          },
+          take: 5
+        })
+
+        if (tips.length > 0) {
+          contextInfo += '\n💡 TIPS PERTINENTS:\n'
+          for (const tip of tips) {
+            foundTips.push(tip.title)
+            contextInfo += `\n"${tip.title}" (${tip.category || 'Général'})\n`
+            contextInfo += `   ${tip.content.slice(0, 300)}\n`
           }
         }
       }
     } catch (error) {
-      // La recherche vectorielle peut échouer si pgvector n'est pas installé
-      console.warn('Recherche vectorielle non disponible:', error)
-    }
-
-    // Recherche par mots-clés en fallback si pas de résultats vectoriels
-    if (!contextInfo) {
-      try {
-        // Recherche dans les procédures
-        const keywords = message.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3).slice(0, 5)
-        if (keywords.length > 0) {
-          const procedures = await db.procedure.findMany({
-            where: {
-              OR: keywords.map((keyword: string) => ({
-                OR: [
-                  { title: { contains: keyword, mode: 'insensitive' as const } },
-                  { description: { contains: keyword, mode: 'insensitive' as const } },
-                  { tags: { contains: keyword, mode: 'insensitive' as const } },
-                ]
-              }))
-            },
-            include: { steps: { orderBy: { order: 'asc' } } },
-            take: 3
-          })
-
-          if (procedures.length > 0) {
-            contextInfo += '\n📖 PROCÉDURES LIÉES (recherche par mots-clés):\n'
-            for (const proc of procedures) {
-              foundProcedures.push(proc.title)
-              contextInfo += `\n🔧 "${proc.title}"\n`
-              contextInfo += `   ${proc.description || ''}\n`
-              if (proc.steps.length > 0) {
-                contextInfo += `   Étapes: ${proc.steps.map(s => s.title).join(' → ')}\n`
-              }
-            }
-          }
-
-          // Recherche dans les tips
-          const tips = await db.tip.findMany({
-            where: {
-              OR: keywords.map((keyword: string) => ({
-                OR: [
-                  { title: { contains: keyword, mode: 'insensitive' as const } },
-                  { content: { contains: keyword, mode: 'insensitive' as const } },
-                  { tags: { contains: keyword, mode: 'insensitive' as const } },
-                ]
-              }))
-            },
-            take: 3
-          })
-
-          if (tips.length > 0) {
-            contextInfo += '\n💡 TIPS LIÉS:\n'
-            for (const tip of tips) {
-              foundTips.push(tip.title)
-              contextInfo += `\n"${tip.title}" (${tip.category || 'Général'})\n`
-              contextInfo += `   ${tip.content.slice(0, 200)}...\n`
-            }
-          }
-        }
-      } catch (error) {
-        console.warn('Recherche par mots-clés échouée:', error)
-      }
+      console.warn('Recherche par mots-clés échouée:', error)
     }
 
     // Ajouter le contexte de la procédure si disponible
