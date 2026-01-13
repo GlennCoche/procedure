@@ -1,0 +1,4 @@
+Release Note WebdynSun et derivées
+
+3.13.02 Corrrection du debug Modbus, Correction du bug des commandes d'écriture Modbus en RTU 2 fils
+3.16.02 Corrections de problèmes mémoires + correction protocole ABB PowerOne sur le dépôt aléatoire des données onduleurs

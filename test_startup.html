@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Startup</title>
+</head>
+<body>
+    <h1>Test de l'API Startup</h1>
+    <button onclick="testStart()">Tester /api/start</button>
+    <button onclick="testStatus()">Tester /api/status</button>
+    <div id="result"></div>
+    
+    <script>
+        function testStart() {
+            fetch('http://localhost:8080/api/start', { method: 'POST' })
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                })
+                .catch(e => {
+                    document.getElementById('result').innerHTML = 'Erreur: ' + e;
+                });
+        }
+        
+        function testStatus() {
+            fetch('http://localhost:8080/api/status')
+                .then(r => r.json())
+                .then(data => {
+                    document.getElementById('result').innerHTML = '<pre>' + JSON.stringify(data, null, 2) + '</pre>';
+                })
+                .catch(e => {
+                    document.getElementById('result').innerHTML = 'Erreur: ' + e;
+                });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,154 @@
+# Règles Cursor IA - Système de Procédures Maintenance Photovoltaïque
+
+## Conventions de Code
+
+### Frontend (Next.js/TypeScript)
+- Utiliser TypeScript strict mode
+- Composants en PascalCase : `ProcedureCard.tsx`
+- Hooks personnalisés avec préfixe `use` : `useProcedure.ts`
+- Fichiers utilitaires en camelCase : `apiClient.ts`
+- Utiliser des composants fonctionnels avec hooks
+- Préférer les Server Components quand possible
+- Utiliser `async/await` pour les appels API
+- Gérer les erreurs avec try/catch et affichage utilisateur
+
+### Backend (Python/FastAPI)
+- Suivre PEP 8
+- Noms de fichiers en snake_case : `procedure_service.py`
+- Classes en PascalCase : `ProcedureService`
+- Fonctions en snake_case : `get_procedure_by_id()`
+- Utiliser type hints partout
+- Docstrings pour toutes les fonctions publiques
+- Gestion d'erreurs avec HTTPException de FastAPI
+
+## Structure des Composants
+
+### Composants React
+```typescript
+// Structure standard d'un composant
+interface ComponentProps {
+  // Props typées
+}
+
+export function Component({ prop }: ComponentProps) {
+  // Hooks
+  // Logique
+  // Render
+  return (
+    // JSX
+  );
+}
+```
+
+### Routes API FastAPI
+```python
+@router.get("/endpoint")
+async def endpoint_function(
+    param: str,
+    db: Session = Depends(get_db)
+) -> ResponseModel:
+    """
+    Description de l'endpoint
+    """
+    # Logique
+    return response
+```
+
+## Bonnes Pratiques
+
+### Sécurité
+- Toujours valider les entrées utilisateur (Pydantic schemas)
+- Ne jamais exposer les clés API dans le code
+- Utiliser des variables d'environnement pour les secrets
+- Hash les mots de passe avec bcrypt
+- Sanitizer les uploads de fichiers
+- Implémenter rate limiting sur les endpoints sensibles
+
+### Performance
+- Utiliser React.memo pour les composants lourds
+- Lazy loading des routes et composants
+- Optimiser les images avec next/image
+- Mettre en cache les réponses API fréquentes
+- Indexer les colonnes de base de données fréquemment requêtées
+
+### UX/UI
+- Design style Apple : épuré, minimaliste, beaucoup d'espace blanc
+- Animations fluides avec Framer Motion ou CSS transitions
+- Feedback visuel pour toutes les actions utilisateur
+- Messages d'erreur clairs et actionnables
+- Loading states pour toutes les opérations async
+- Responsive mobile-first
+
+### Gestion d'État
+- Zustand pour état global simple
+- React Query pour données serveur
+- Éviter prop drilling excessif
+- Local state quand possible
+
+### Base de Données
+- Utiliser des transactions pour opérations multiples
+- Relations bien définies avec foreign keys
+- Migrations Alembic pour tous les changements de schéma
+- Index sur colonnes fréquemment recherchées
+
+## Gestion des Erreurs
+
+### Frontend
+```typescript
+try {
+  const data = await apiCall();
+} catch (error) {
+  // Logger l'erreur
+  console.error('Error:', error);
+  // Afficher message utilisateur
+  toast.error('Message utilisateur clair');
+}
+```
+
+### Backend
+```python
+try:
+    result = operation()
+except SpecificException as e:
+    logger.error(f"Error: {e}")
+    raise HTTPException(status_code=400, detail="Message clair")
+```
+
+## Format des Commits
+
+- Format : `type(scope): description`
+- Types : `feat`, `fix`, `docs`, `style`, `refactor`, `test`, `chore`
+- Exemples :
+  - `feat(auth): add login functionality`
+  - `fix(procedures): correct step validation`
+  - `refactor(ui): improve component structure`
+
+## Tests
+
+- Tests unitaires pour logique métier
+- Tests d'intégration pour API endpoints
+- Tests E2E pour flux utilisateur critiques
+- Coverage minimum : 70%
+
+## Documentation
+
+- README avec instructions setup
+- Commentaires pour logique complexe
+- Docstrings pour fonctions publiques
+- Types TypeScript explicites (éviter `any`)
+
+## Intégration IA
+
+- Utiliser GPT-4o-mini pour réduire les coûts
+- Mettre en cache les réponses similaires
+- Stream les réponses pour meilleure UX
+- Gérer les erreurs API OpenAI gracieusement
+- Limiter la taille des contextes pour optimiser les coûts
+
+## Accessibilité
+
+- Utiliser des composants accessibles (Radix UI)
+- Labels ARIA appropriés
+- Navigation au clavier
+- Contraste de couleurs suffisant
+- Support lecteurs d'écran

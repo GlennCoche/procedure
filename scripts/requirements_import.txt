@@ -1,0 +1,5 @@
+# Dépendances optionnelles pour l'import de données depuis PDF
+# Installer avec: pip install -r scripts/requirements_import.txt
+
+PyPDF2==3.0.1
+pdfplumber==0.10.3

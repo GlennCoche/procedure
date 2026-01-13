@@ -1,0 +1,24 @@
+{
+  "sampleProcedure": {
+    "title": "Test Procedure - Maintenance Panneaux",
+    "description": "Procédure de test pour la maintenance des panneaux photovoltaïques",
+    "category": "Maintenance",
+    "tags": ["panneaux", "maintenance", "test"],
+    "steps": [
+      {
+        "order": 1,
+        "title": "Vérification visuelle",
+        "description": "Inspecter visuellement les panneaux pour détecter des dommages",
+        "instructions": "Regarder chaque panneau attentivement",
+        "validationType": "manual"
+      },
+      {
+        "order": 2,
+        "title": "Test de tension",
+        "description": "Mesurer la tension de sortie des panneaux",
+        "instructions": "Utiliser un multimètre pour mesurer la tension",
+        "validationType": "manual"
+      }
+    ]
+  }
+}

@@ -1,0 +1,370 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1036{\fonttbl{\f0\fnil\fcharset0 Tahoma;}}
+\viewkind4\uc1\pard\b\f0\fs20    Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+Hex Length: 22528(0x10) / 16928(0x20)\par
+Hex SUM CRC: 0x99E7(0x10) / D25C(0x20)\par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 06 00 01 6A 85 \par
+   Rx: FF FF 0B 00 04 04 06 0E 01 6F 91 \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 0B 00 01 05 C3 B7 \par
+   ID11: Enter bootloader mode1 - OK\par
+   Rx: FF FF 0B 00 01 06 83 B6 \par
+   ID11: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 0B 00 02 11 06 88 53 \par
+   ID:11 Select Processor 6 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 0B 00 06 12 00 00 28 00 08 97 8C \par
+   Bank select: 0\par
+   This Device Starts address: 0x08002800\par
+   ID11: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 0B 00 05 A0 00 28 00 08 40 31 FF FF 0B 00 05 A0 00 28 00 08 40 31 \par
+   ID11: Retry Address: 0x08002800\par
+   Total Hex Length: 16928\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0xD25C\par
+   Rx: FF FF 0B 00 04 13 00 5C D2 F6 D9 \par
+   ID11: INV_CheckSUM - 0xD25C\par
+   ID11: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 0B 00 02 14 00 0B 01 \par
+   ID11: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 0B 00 04 04 06 10 01 66 31 \par
+End Time: 15:40:15\par
+Total Time: 92 S\par
+   Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+Hex Length: 171648(0x10) / 171648(0x20)\par
+Hex SUM CRC: 0xDA42(0x10) / DA42(0x20)\par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 00 00 01 8A 84 \par
+   Rx: FF FF 0B 00 04 04 00 10 01 86 30 \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 0B 00 01 05 C3 B7 \par
+   ID11: Enter bootloader mode1 - OK\par
+   Rx: FF FF 0B 00 01 06 83 B6 \par
+   ID11: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 0B 00 02 11 00 08 51 \par
+   ID:11 Select Processor 0 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 0B 00 06 12 00 00 00 02 08 16 E4 \par
+   Bank select: 0\par
+   This Device Starts address: 0x08020000\par
+   ID11: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 0B 00 05 A0 00 00 02 08 C1 59 FF FF 0B 00 05 A0 00 00 02 08 C1 59 \par
+   ID11: Retry Address: 0x08020000\par
+   Total Hex Length: 171648\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0xDA42\par
+   Rx: FF FF 0B 00 04 13 00 42 DA FE BF \par
+   ID11: INV_CheckSUM - 0xDA42\par
+   ID11: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 0B 00 02 14 00 0B 01 \par
+   ID11: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 0B 00 04 04 00 15 01 85 60 \par
+End Time: 15:48:45\par
+Total Time: 408 S\par
+   Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+Hex Length: 22528(0x10) / 21024(0x20)\par
+Hex SUM CRC: 0x6FE4(0x10) / E428(0x20)\par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 02 00 01 2B 44 \par
+   Rx: FF FF 0B 00 04 04 02 0D 01 2E A0 \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 0B 00 01 05 C3 B7 \par
+   ID11: Enter bootloader mode1 - OK\par
+   Rx: FF FF 0B 00 01 06 83 B6 \par
+   ID11: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 0B 00 02 11 02 89 90 \par
+   ID:11 Select Processor 2 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 0B 00 06 12 00 00 28 00 08 97 8C \par
+   Bank select: 0\par
+   This Device Starts address: 0x08002800\par
+   ID11: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 0B 00 05 A0 00 28 00 08 40 31 FF FF 0B 00 05 A0 00 28 00 08 40 31 \par
+   ID11: Retry Address: 0x08002800\par
+   Total Hex Length: 21024\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0xE428\par
+   Rx: FF FF 0B 00 04 13 00 28 E4 51 CF \par
+   ID11: INV_CheckSUM - 0xE428\par
+   ID11: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 0B 00 02 14 00 0B 01 \par
+   ID11: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 0B 00 04 04 02 0F 01 2F C0 \par
+End Time: 15:50:47\par
+Total Time: 101 S\par
+   Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+Hex Length: 229376(0x10) / 20864(0x20)\par
+Hex SUM CRC: 0xDE03(0x10) / F521(0x20)\par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 05 00 01 9A 85 \par
+   Rx: FF FF 0B 00 04 04 05 0C 01 9E F1 \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+   Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+Hex Length: 229376(0x10) / 168064(0x20)\par
+Hex SUM CRC: 0x0017(0x10) / 6110(0x20)\par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 01 00 01 DB 44 \par
+   Rx: FF FF 0B 00 04 04 01 15 01 D4 A0 \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+   Rx: FF FF 02 00 06 16 03 00 00 00 00 39 96 \par
+   Rx: FF FF 03 00 06 16 03 00 00 00 00 34 06 \par
+   Rx: FF FF 04 00 06 16 03 00 00 00 00 12 36 \par
+   Rx: FF FF 05 00 06 16 03 00 00 00 00 1F A6 \par
+   Rx: FF FF 06 00 06 16 03 00 00 00 00 0B 56 \par
+   Rx: FF FF 07 00 06 16 03 00 00 00 00 06 C6 \par
+   Rx: FF FF 08 00 06 16 03 00 00 00 00 47 36 \par
+   Rx: FF FF 09 00 06 16 03 00 00 00 00 4A A6 \par
+   Rx: FF FF 0A 00 06 16 03 00 00 00 00 5E 56 \par
+   Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+   Rx: FF FF 0C 00 06 16 03 00 00 00 00 75 F6 \par
+   Rx: FF FF 0D 00 06 16 03 00 00 00 00 78 66 \par
+   Rx: FF FF 0E 00 06 16 03 00 00 00 00 6C 96 \par
+   Rx: FF FF 0F 00 06 16 03 00 00 00 00 61 06 \par
+   Rx: FF FF 10 00 06 16 03 00 00 00 00 ED 36 \par
+   Rx: FF FF 11 00 06 16 03 00 00 00 00 E0 A6 \par
+   Rx: FF FF 12 00 06 16 03 00 00 00 00 F4 56 \par
+   Rx: FF FF 13 00 06 16 03 00 00 00 00 F9 C6 \par
+   Rx: FF FF 14 00 06 16 03 00 00 00 00 DF F6 \par
+   Rx: FF FF 15 00 06 16 03 00 00 00 00 D2 66 \par
+   Rx: FF FF 16 00 06 16 03 00 00 00 00 C6 96 \par
+   Rx: FF FF 17 00 06 16 03 00 00 00 00 CB 06 \par
+Hex Length: 229376(0x10) / 168064(0x20)\par
+Hex SUM CRC: 0x0017(0x10) / 6110(0x20)\par
+ID2: Getting Information\par
+   Rx: FF FF 02 00 05 00 22 76 19 03 21 BF \par
+   Rx: FF FF 02 00 11 01 20 4F 37 35 32 30 36 30 30 33 39 37 57 4C 20 20 DB C2 \par
+   Rx: FF FF 02 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 27 60 \par
+   Rx: FF FF 02 00 04 03 01 00 01 42 44 \par
+   Rx: FF FF 02 00 04 04 01 15 01 4D A0 \par
+ID3: Getting Information\par
+   Rx: FF FF 03 00 05 00 22 76 19 03 E0 73 \par
+   Rx: FF FF 03 00 11 01 20 4F 37 35 32 30 36 30 30 34 30 31 57 4C 20 20 18 4A \par
+   Rx: FF FF 03 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 1A B1 \par
+   Rx: FF FF 03 00 04 03 01 00 01 52 84 \par
+   Rx: FF FF 03 00 04 04 01 15 01 5D 60 \par
+ID4: Getting Information\par
+   Rx: FF FF 04 00 05 00 22 76 19 03 A1 95 \par
+   Rx: FF FF 04 00 11 01 20 4F 37 35 32 30 36 30 30 34 30 33 57 4C 20 20 D4 3D \par
+   Rx: FF FF 04 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 AF 06 \par
+   Rx: FF FF 04 00 04 03 01 00 01 24 44 \par
+   Rx: FF FF 04 00 04 04 01 15 01 2B A0 \par
+ID5: Getting Information\par
+   Rx: FF FF 05 00 05 00 22 76 19 03 60 59 \par
+   Rx: FF FF 05 00 11 01 20 4F 37 35 32 30 36 30 30 34 30 36 57 4C 20 20 25 EC \par
+   Rx: FF FF 05 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 92 D7 \par
+   Rx: FF FF 05 00 04 03 01 00 01 34 84 \par
+   Rx: FF FF 05 00 04 04 01 15 01 3B 60 \par
+ID6: Getting Information\par
+   Rx: FF FF 06 00 05 00 22 76 19 03 20 4C \par
+   Rx: FF FF 06 00 11 01 20 4F 37 35 32 30 36 30 30 34 30 37 57 4C 20 20 5C 1F \par
+   Rx: FF FF 06 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 D6 E4 \par
+   Rx: FF FF 06 00 04 03 01 00 01 07 84 \par
+   Rx: FF FF 06 00 04 04 01 15 01 08 60 \par
+ID7: Getting Information\par
+   Rx: FF FF 07 00 05 00 22 76 19 03 E1 80 \par
+   Rx: FF FF 07 00 11 01 20 4F 37 35 32 30 36 30 30 34 31 30 57 4C 20 20 D5 DF \par
+   Rx: FF FF 07 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 EB 35 \par
+   Rx: FF FF 07 00 04 03 01 00 01 17 44 \par
+   Rx: FF FF 07 00 04 04 01 15 01 18 A0 \par
+ID8: Getting Information\par
+   Rx: FF FF 08 00 05 00 22 76 19 03 A1 C0 \par
+   Rx: FF FF 08 00 11 01 20 4F 37 35 32 30 36 30 30 34 31 33 57 4C 20 20 C5 21 \par
+   Rx: FF FF 08 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 BF CB \par
+   Rx: FF FF 08 00 04 03 01 00 01 E8 44 \par
+   Rx: FF FF 08 00 04 04 01 15 01 E7 A0 \par
+ID9: Getting Information\par
+   Rx: FF FF 09 00 05 00 22 76 19 03 60 0C \par
+   Rx: FF FF 09 00 11 01 20 4F 37 35 32 30 36 30 30 34 31 36 57 4C 20 20 34 F0 \par
+   Rx: FF FF 09 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 82 1A \par
+   Rx: FF FF 09 00 04 03 01 00 01 F8 84 \par
+   Rx: FF FF 09 00 04 04 01 15 01 F7 60 \par
+ID10: Getting Information\par
+   Rx: FF FF 0A 00 05 00 22 76 19 03 20 19 \par
+   Rx: FF FF 0A 00 11 01 20 4F 37 35 32 30 36 30 30 34 33 32 57 4C 20 20 80 E1 \par
+   Rx: FF FF 0A 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 C6 29 \par
+   Rx: FF FF 0A 00 04 03 01 00 01 CB 84 \par
+   Rx: FF FF 0A 00 04 04 01 15 01 C4 60 \par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 01 00 01 DB 44 \par
+   Rx: FF FF 0B 00 04 04 01 15 01 D4 A0 \par
+ID12: Getting Information\par
+   Rx: FF FF 0C 00 05 00 22 76 19 03 A0 33 \par
+   Rx: FF FF 0C 00 11 01 20 4F 37 35 32 30 36 30 30 34 35 39 57 4C 20 20 AD 20 \par
+   Rx: FF FF 0C 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 4E 4F \par
+   Rx: FF FF 0C 00 04 03 01 00 01 AD 84 \par
+   Rx: FF FF 0C 00 04 04 01 15 01 A2 60 \par
+ID13: Getting Information\par
+   Rx: FF FF 0D 00 05 00 22 76 19 03 61 FF \par
+   Rx: FF FF 0D 00 11 01 20 4F 37 35 32 30 36 30 30 34 37 39 57 4C 20 20 91 13 \par
+   Rx: FF FF 0D 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 73 9E \par
+   Rx: FF FF 0D 00 04 03 01 00 01 BD 44 \par
+   Rx: FF FF 0D 00 04 04 01 15 01 B2 A0 \par
+ID14: Getting Information\par
+   Rx: FF FF 0E 00 05 00 22 76 19 03 21 EA \par
+   Rx: FF FF 0E 00 11 01 20 4F 37 35 32 30 36 30 30 34 38 30 57 4C 20 20 09 DE \par
+   Rx: FF FF 0E 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 37 AD \par
+   Rx: FF FF 0E 00 04 03 01 00 01 8E 44 \par
+   Rx: FF FF 0E 00 04 04 01 15 01 81 A0 \par
+ID15: Getting Information\par
+   Rx: FF FF 0F 00 05 00 22 76 19 03 E0 26 \par
+   Rx: FF FF 0F 00 11 01 20 4F 37 35 32 30 36 30 30 34 38 33 57 4C 20 20 70 0F \par
+   Rx: FF FF 0F 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 0A 7C \par
+   Rx: FF FF 0F 00 04 03 01 00 01 9E 84 \par
+   Rx: FF FF 0F 00 04 04 01 15 01 91 60 \par
+ID16: Getting Information\par
+   Rx: FF FF 10 00 05 00 22 76 19 03 A1 6A \par
+   Rx: FF FF 10 00 11 01 20 4F 37 35 32 30 36 30 30 34 38 35 57 4C 20 20 6E 62 \par
+   Rx: FF FF 10 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 9C 11 \par
+   Rx: FF FF 10 00 04 03 01 00 01 70 45 \par
+   Rx: FF FF 10 00 04 04 01 15 01 7F A1 \par
+ID17: Getting Information\par
+   Rx: FF FF 11 00 05 00 22 76 19 03 60 A6 \par
+   Rx: FF FF 11 00 11 01 20 4F 37 35 32 30 36 30 30 34 38 37 57 4C 20 20 2A 73 \par
+   Rx: FF FF 11 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 A1 C0 \par
+   Rx: FF FF 11 00 04 03 01 00 01 60 85 \par
+   Rx: FF FF 11 00 04 04 01 15 01 6F 61 \par
+ID18: Getting Information\par
+   Rx: FF FF 12 00 05 00 22 76 19 03 20 B3 \par
+   Rx: FF FF 12 00 11 01 20 4F 37 35 32 30 36 30 30 34 38 38 57 4C 20 20 3A 41 \par
+   Rx: FF FF 12 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 E5 F3 \par
+   Rx: FF FF 12 00 04 03 01 00 01 53 85 \par
+   Rx: FF FF 12 00 04 04 01 15 01 5C 61 \par
+ID19: Getting Information\par
+   Rx: FF FF 13 00 05 00 22 76 19 03 E1 7F \par
+   Rx: FF FF 13 00 11 01 20 4F 37 35 32 30 36 30 30 34 38 39 57 4C 20 20 3A 50 \par
+   Rx: FF FF 13 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 D8 22 \par
+   Rx: FF FF 13 00 04 03 01 00 01 43 45 \par
+   Rx: FF FF 13 00 04 04 01 15 01 4C A1 \par
+ID20: Getting Information\par
+   Rx: FF FF 14 00 05 00 22 76 19 03 A0 99 \par
+   Rx: FF FF 14 00 11 01 20 4F 37 35 32 30 36 30 30 34 39 37 57 4C 20 20 E7 F7 \par
+   Rx: FF FF 14 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 6D 95 \par
+   Rx: FF FF 14 00 04 03 01 00 01 35 85 \par
+   Rx: FF FF 14 00 04 04 01 15 01 3A 61 \par
+ID21: Getting Information\par
+   Rx: FF FF 15 00 05 00 22 76 19 03 61 55 \par
+   Rx: FF FF 15 00 11 01 20 4F 37 35 32 30 36 30 30 35 30 38 57 4D 20 20 CF BE \par
+   Rx: FF FF 15 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 50 44 \par
+   Rx: FF FF 15 00 04 03 01 00 01 25 45 \par
+   Rx: FF FF 15 00 04 04 01 15 01 2A A1 \par
+ID22: Getting Information\par
+   Rx: FF FF 16 00 05 00 22 76 19 03 21 40 \par
+   Rx: FF FF 16 00 11 01 20 4F 37 35 32 30 36 30 30 35 31 33 57 4D 20 20 2F 9D \par
+   Rx: FF FF 16 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 14 77 \par
+   Rx: FF FF 16 00 04 03 01 00 01 16 45 \par
+   Rx: FF FF 16 00 04 04 01 15 01 19 A1 \par
+ID23: Getting Information\par
+   Rx: FF FF 17 00 05 00 22 76 19 03 E0 8C \par
+   Rx: FF FF 17 00 11 01 20 4F 37 35 32 30 36 30 30 35 31 36 57 4D 20 20 DE 4C \par
+   Rx: FF FF 17 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 29 A6 \par
+   Rx: FF FF 17 00 04 03 01 00 01 06 85 \par
+   Rx: FF FF 17 00 04 04 01 15 01 09 61 \par
+ID: 2, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600397WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 3, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600401WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 4, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600403WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 5, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600406WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 6, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600407WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 7, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600410WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 8, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600413WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 9, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600416WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 10, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600432WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 12, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600459WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 13, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600479WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 14, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600480WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 15, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600483WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 16, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600485WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 17, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600487WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 18, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600488WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 19, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600489WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 20, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600497WL  , Product ID:52000290, Boot SW:V03, \par
+ID: 21, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600508WM  , Product ID:52000290, Boot SW:V03, \par
+ID: 22, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600513WM  , Product ID:52000290, Boot SW:V03, \par
+ID: 23, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600516WM  , Product ID:52000290, Boot SW:V03, \par
+   Rx: FF FF 0B 00 06 16 03 00 00 00 00 53 C6 \par
+Hex Length: 229376(0x10) / 168064(0x20)\par
+Hex SUM CRC: 0x0017(0x10) / 6110(0x20)\par
+ID11: Getting Information\par
+   Rx: FF FF 0B 00 05 00 22 76 19 03 E1 D5 \par
+   Rx: FF FF 0B 00 11 01 20 4F 37 35 32 30 36 30 30 34 34 34 57 4C 20 20 34 87 \par
+   Rx: FF FF 0B 00 11 02 4D 31 32 35 48 56 20 20 20 20 20 20 20 20 20 20 FB F8 \par
+   Rx: FF FF 0B 00 04 03 01 00 01 DB 44 \par
+   Rx: FF FF 0B 00 04 04 01 15 01 D4 A0 \par
+ID: 11, :, Mode:Normal, Model Name:M125HV    , Serial Number: O7520600444WL  , Product ID:52000290, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 0B 00 01 05 C3 B7 \par
+   ID11: Enter bootloader mode1 - OK\par
+   Rx: FF FF 0B 00 01 06 83 B6 \par
+   ID11: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 0B 00 02 11 01 C9 91 \par
+   ID:11 Select Processor 1 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 0B 00 06 12 00 00 40 08 00 10 56 \par
+   Bank select: 0\par
+   This Device Starts address: 0x00084000\par
+   ID11: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 0B 00 05 A0 00 40 08 00 C7 EB FF FF 0B 00 05 A0 00 40 08 00 C7 EB \par
+   ID11: Retry Address: 0x00084000\par
+   Total Hex Length: 168064\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0x6110\par
+   Rx: FF FF 0B 00 04 13 00 10 61 83 AC \par
+   ID11: INV_CheckSUM - 0x6110\par
+   ID11: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 0B 00 02 14 00 0B 01 \par
+   ID11: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 0B 00 04 04 01 1F 01 D2 00 \par
+End Time: 16:1:43\par
+Total Time: 445 S\par
+\par
+}
+ 

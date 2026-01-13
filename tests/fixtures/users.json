@@ -1,0 +1,12 @@
+{
+  "admin": {
+    "email": "admin@procedures.local",
+    "password": "AdminSecure123!",
+    "role": "admin"
+  },
+  "technician": {
+    "email": "technician@procedures.local",
+    "password": "Technician123!",
+    "role": "technician"
+  }
+}

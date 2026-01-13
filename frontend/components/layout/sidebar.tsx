@@ -10,6 +10,7 @@ const navigation = [
   { name: "Procédures", href: "/dashboard/procedures", icon: FileText },
   { name: "Chat IA", href: "/dashboard/chat", icon: MessageSquare },
   { name: "Tips & Astuces", href: "/dashboard/tips", icon: Lightbulb },
+  { name: "Réglages France", href: "/dashboard/settings", icon: Settings },
   { name: "Reconnaissance", href: "/dashboard/camera", icon: Camera },
 ]
 

@@ -1,0 +1,134 @@
+{
+  "total_files": 741,
+  "total_size_mb": 364.98,
+  "by_brand": {
+    "Delta": {
+      "count": 680,
+      "size_mb": 42.83
+    },
+    "ABB": {
+      "count": 11,
+      "size_mb": 106.98
+    },
+    "Goodwe": {
+      "count": 20,
+      "size_mb": 84.0
+    },
+    "Huawei": {
+      "count": 18,
+      "size_mb": 80.65
+    },
+    "Webdynsun": {
+      "count": 4,
+      "size_mb": 4.35
+    },
+    "Bridage Raccordement": {
+      "count": 2,
+      "size_mb": 0.77
+    },
+    "Sungrow": {
+      "count": 2,
+      "size_mb": 37.48
+    },
+    "WebdynsunPM": {
+      "count": 4,
+      "size_mb": 7.92
+    }
+  },
+  "by_type": {
+    "pdf": {
+      "count": 70,
+      "size_mb": 309.27
+    },
+    "zip": {
+      "count": 8,
+      "size_mb": 54.6
+    },
+    "mms": {
+      "count": 623,
+      "size_mb": 0.49
+    },
+    "csv": {
+      "count": 7,
+      "size_mb": 0.04
+    },
+    "txt": {
+      "count": 31,
+      "size_mb": 0.18
+    },
+    "jpg": {
+      "count": 1,
+      "size_mb": 0.08
+    },
+    "docx": {
+      "count": 1,
+      "size_mb": 0.32
+    }
+  },
+  "by_brand_and_type": {
+    "Delta_pdf": {
+      "count": 14,
+      "size_mb": 26.76
+    },
+    "Delta_zip": {
+      "count": 5,
+      "size_mb": 15.36
+    },
+    "Delta_mms": {
+      "count": 623,
+      "size_mb": 0.49
+    },
+    "Delta_csv": {
+      "count": 7,
+      "size_mb": 0.04
+    },
+    "Delta_txt": {
+      "count": 31,
+      "size_mb": 0.18
+    },
+    "ABB_pdf": {
+      "count": 11,
+      "size_mb": 106.98
+    },
+    "Goodwe_pdf": {
+      "count": 20,
+      "size_mb": 84.0
+    },
+    "Huawei_pdf": {
+      "count": 16,
+      "size_mb": 46.71
+    },
+    "Huawei_zip": {
+      "count": 2,
+      "size_mb": 33.94
+    },
+    "Webdynsun_pdf": {
+      "count": 3,
+      "size_mb": 4.27
+    },
+    "Webdynsun_jpg": {
+      "count": 1,
+      "size_mb": 0.08
+    },
+    "Bridage Raccordement_pdf": {
+      "count": 2,
+      "size_mb": 0.77
+    },
+    "Sungrow_pdf": {
+      "count": 2,
+      "size_mb": 37.48
+    },
+    "WebdynsunPM_docx": {
+      "count": 1,
+      "size_mb": 0.32
+    },
+    "WebdynsunPM_zip": {
+      "count": 1,
+      "size_mb": 5.3
+    },
+    "WebdynsunPM_pdf": {
+      "count": 2,
+      "size_mb": 2.3
+    }
+  }
+}

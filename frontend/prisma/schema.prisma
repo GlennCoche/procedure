@@ -61,9 +61,25 @@ model Step {
 
   procedure     Procedure @relation(fields: [procedureId], references: [id], onDelete: Cascade)
   stepExecutions StepExecution[]
+  images        StepImage[]
 
   @@index([procedureId])
   @@map("steps")
+}
+
+model StepImage {
+  id          Int      @id @default(autoincrement())
+  stepId      Int      @map("step_id")
+  imageUrl    String   @map("image_url") @db.Text
+  description String?  @db.Text
+  imageType   String?  @map("image_type") @db.VarChar(50) // diagram, photo, graph, table
+  order       Int      @default(0)
+  createdAt   DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  step        Step     @relation(fields: [stepId], references: [id], onDelete: Cascade)
+
+  @@index([stepId])
+  @@map("step_images")
 }
 
 model Execution {
@@ -131,4 +147,41 @@ model ChatMessage {
   @@index([userId])
   @@index([createdAt])
   @@map("chat_messages")
+}
+
+model DocumentEmbedding {
+  id           Int      @id @default(autoincrement())
+  documentType String   @map("document_type") @db.VarChar(50) // 'procedure' | 'tip'
+  documentId   Int      @map("document_id")
+  content      String   @db.Text
+  embedding    Unsupported("vector(1536)")? // Vector embedding (pgvector)
+  metadata     String?  @db.Text // JSON string
+  createdAt    DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  @@index([documentType, documentId])
+  @@index([documentType])
+  @@map("document_embeddings")
+}
+
+model Setting {
+  id            Int      @id @default(autoincrement())
+  brand         String   @db.VarChar(100)
+  equipmentType String   @map("equipment_type") @db.VarChar(100) // onduleur, optimiseur, batterie, etc.
+  model         String?  @db.VarChar(200)
+  category      String   @db.VarChar(100) // tension, frequence, puissance, reseau, communication, protection, injection
+  name          String   @db.VarChar(200)
+  value         String   @db.Text
+  unit          String?  @db.VarChar(50)
+  country       String   @default("FR") @db.VarChar(10)
+  sourceDoc     String?  @map("source_doc") @db.Text
+  pageNumber    Int?     @map("page_number")
+  notes         String?  @db.Text
+  createdAt     DateTime @default(now()) @map("created_at") @db.Timestamptz(6)
+  updatedAt     DateTime @updatedAt @map("updated_at") @db.Timestamptz(6)
+
+  @@index([brand])
+  @@index([category])
+  @@index([country])
+  @@index([equipmentType])
+  @@map("settings")
 }

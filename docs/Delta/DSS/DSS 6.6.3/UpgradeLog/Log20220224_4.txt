@@ -1,0 +1,208 @@
+{\rtf1\ansi\ansicpg1252\deff0\deflang1036{\fonttbl{\f0\fnil\fcharset0 Tahoma;}}
+{\colortbl ;\red255\green0\blue0;}
+\viewkind4\uc1\pard\b\f0\fs20    Rx: FF FF 01 00 06 16 03 00 00 00 00 2D 66 \par
+Hex Length: 267136(0x10) / 217344(0x20)\par
+Hex SUM CRC: 0x5E22(0x10) / 9CCE(0x20)\par
+ID1: Getting Information\par
+   Rx: FF FF 01 00 05 00 25 76 19 03 60 DE \par
+   Rx: FF FF 01 00 11 01 20 4F 38 58 32 31 38 30 31 37 39 31 57 56 20 20 4A D1 \par
+   Rx: FF FF 01 00 11 02 4D 37 30 41 5F 32 36 30 20 20 20 20 20 20 20 20 A4 68 \par
+   Rx: FF FF 01 00 04 03 01 00 01 71 44 \par
+   Rx: FF FF 01 00 04 04 01 1F 01 78 00 \par
+ID: 1, :, Mode:Normal, Model Name:M70A_260  , Serial Number: O8X21801791WV  , Product ID:52000293, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 01 00 01 05 C0 6F \par
+   ID1: Enter bootloader mode1 - OK\par
+   Rx: FF FF 01 00 01 06 80 6E \par
+   ID1: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 01 00 02 11 01 51 90 \par
+   ID:1 Select Processor 1 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 01 00 06 12 00 00 40 08 00 6E F6 \par
+   Bank select: 0\par
+   This Device Starts address: 0x00084000\par
+   ID1: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 01 00 05 A0 00 40 08 00 47 94 FF FF 01 00 05 A0 00 40 08 \par
+   ID1: Retry Address: 0x00084000\par
+   Total Hex Length: 217344\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0x9CCE\par
+   Rx: \par
+\cf1    ID1: Check SUM CRC& Bank Close Error\par
+\cf0    Rx: \par
+\cf1    ID1: Check SUM CRC& Bank Close Error\par
+\cf0    Rx: \par
+\cf1    ID1: Check SUM CRC& Bank Close Error\par
+\cf0    Rx: \par
+\cf1    ID1: Check SUM CRC& Bank Close Error\par
+\cf0    Rx: \par
+\cf1    ID1: Check SUM CRC& Bank Close Error\par
+\cf0 Step7 - Done\par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: \par
+   Rx: FF FF 01 00 01 05 C0 6F \par
+   ID1: Enter bootloader mode1 - OK\par
+   Rx: FF FF 01 00 01 06 80 6E \par
+   ID1: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 01 00 02 11 01 51 90 \par
+   ID:1 Select Processor 1 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 01 00 06 12 00 00 40 08 00 6E F6 \par
+   Bank select: 0\par
+   This Device Starts address: 0x00084000\par
+   ID1: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 01 00 05 A0 00 40 08 00 47 94 FF FF 01 00 05 A0 00 40 08 00 47 94 \par
+   ID1: Retry Address: 0x00084000\par
+   Rx: FF FF 01 00 05 A0 80 44 08 00 2F 95 FF FF 01 00 05 A0 80 44 08 00 2F 95 \par
+   ID1: Retry Address: 0x00084480\par
+   Total Hex Length: 217344\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0x9CCE\par
+   Rx: FF FF 01 00 04 13 00 CE 9C B1 8D \par
+   ID1: INV_CheckSUM - 0x9CCE\par
+   ID1: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 01 00 02 14 00 93 00 \par
+   ID1: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 01 00 04 04 01 21 01 68 60 \par
+End Time: 9:4:41\par
+Total Time: 1022 S\par
+   Rx: FF FF 01 00 06 16 03 00 00 00 00 2D 66 \par
+Hex Length: 229376(0x10) / 21632(0x20)\par
+Hex SUM CRC: 0xB01D(0x10) / 8EE5(0x20)\par
+ID1: Getting Information\par
+   Rx: FF FF 01 00 05 00 25 76 19 03 60 DE \par
+   Rx: FF FF 01 00 11 01 20 4F 38 58 32 31 38 30 31 37 39 31 57 56 20 20 4A D1 \par
+   Rx: FF FF 01 00 11 02 4D 37 30 41 5F 32 36 30 20 20 20 20 20 20 20 20 A4 68 \par
+   Rx: FF FF 01 00 04 03 05 00 01 30 85 \par
+   Rx: FF FF 01 00 04 04 05 0F 01 34 01 \par
+ID: 1, :, Mode:Normal, Model Name:M70A_260  , Serial Number: O8X21801791WV  , Product ID:52000293, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 01 00 01 05 C0 6F \par
+   ID1: Enter bootloader mode1 - OK\par
+   Rx: FF FF 01 00 01 06 80 6E \par
+   ID1: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 01 00 02 11 05 50 53 \par
+   ID:1 Select Processor 5 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 01 00 06 12 00 00 40 08 00 6E F6 \par
+   Bank select: 0\par
+   This Device Starts address: 0x00084000\par
+   ID1: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 01 00 05 A0 00 40 08 00 47 94 FF FF 01 00 05 A0 00 E0 \par
+   ID1: Retry Address: 0x00084000\par
+   Total Hex Length: 21632\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0x8EE5\par
+   Rx: FF FF 01 00 04 13 00 E5 8E 2F 70 \par
+   ID1: INV_CheckSUM - 0x8EE5\par
+   ID1: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 01 00 02 14 00 93 00 \par
+   ID1: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 01 00 04 04 05 0F 01 34 01 \par
+End Time: 9:7:22\par
+Total Time: 94 S\par
+   Rx: FF FF 01 00 06 16 03 00 00 00 00 2D 66 \par
+Hex Length: 212224(0x10) / 212224(0x20)\par
+Hex SUM CRC: 0xED14(0x10) / ED14(0x20)\par
+ID1: Getting Information\par
+   Rx: FF FF 01 00 05 00 25 76 19 03 60 DE \par
+   Rx: FF FF 01 00 11 01 20 4F 38 58 32 31 38 30 31 37 39 31 57 56 20 20 4A D1 \par
+   Rx: FF FF 01 00 11 02 4D 37 30 41 5F 32 36 30 20 20 20 20 20 20 20 20 A4 68 \par
+   Rx: FF FF 01 00 04 03 00 00 01 20 84 \par
+   Rx: FF FF 01 00 04 04 00 1B 01 2B 00 \par
+ID: 1, :, Mode:Normal, Model Name:M70A_260  , Serial Number: O8X21801791WV  , Product ID:52000293, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 01 00 01 05 C0 6F \par
+   ID1: Enter bootloader mode1 - OK\par
+   Rx: FF FF 01 00 01 06 80 6E \par
+   ID1: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 01 00 02 11 00 90 50 \par
+   ID:1 Select Processor 0 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 01 00 06 12 00 00 00 02 08 68 44 \par
+   Bank select: 0\par
+   This Device Starts address: 0x08020000\par
+   ID1: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF 01 00 05 A0 00 00 02 08 41 26 FF FF 01 00 05 A0 00 00 02 08 41 26 \par
+   ID1: Retry Address: 0x08020000\par
+   Total Hex Length: 212224\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0xED14\par
+   Rx: FF FF 01 00 04 13 00 14 ED 2A C9 \par
+   ID1: INV_CheckSUM - 0xED14\par
+   ID1: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 01 00 02 14 00 93 00 \par
+   ID1: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 01 00 04 04 00 1C 01 29 30 \par
+End Time: 9:14:58\par
+Total Time: 431 S\par
+   Rx: FF FF 01 00 06 16 03 00 00 00 00 2D 66 \par
+Hex Length: 22528(0x10) / 21504(0x20)\par
+Hex SUM CRC: 0x0BCE(0x10) / 65EB(0x20)\par
+ID1: Getting Information\par
+   Rx: FF FF 01 00 05 00 25 76 19 03 60 DE \par
+   Rx: FF FF 01 00 11 01 20 4F 38 58 32 31 38 30 31 37 39 31 57 56 20 20 4A D1 \par
+   Rx: FF FF 01 00 11 02 4D 37 30 41 5F 32 36 30 20 20 20 20 20 20 20 20 A4 68 \par
+   Rx: FF FF 01 00 04 03 02 00 01 81 44 \par
+   Rx: FF FF 01 00 04 04 02 0B 01 87 00 \par
+ID: 1, :, Mode:Normal, Model Name:M70A_260  , Serial Number: O8X21801791WV  , Product ID:52000293, Boot SW:V03, \par
+In V03 Procedure\par
+Step1 - Check Device\par
+Step2 - Enter bootloader mode\par
+   Rx: FF FF 01 00 01 05 C0 6F \par
+   ID1: Enter bootloader mode1 - OK\par
+   Rx: FF FF 01 00 01 06 80 6E \par
+   ID1: Enter bootloader mode2 - OK\par
+Step3 - Select Processor\par
+   Rx: FF FF 01 00 02 11 02 11 91 \par
+   ID:1 Select Processor 2 OK\par
+Step4 - Select Bank\par
+   Rx: FF FF 01 00 06 12 00 00 28 00 08 E9 2C \par
+   Bank select: 0\par
+   This Device Starts address: 0x08002800\par
+   ID1: Bank select OK\par
+Step5 - Programming\par
+   Rx: FF FF FD FF FF 01 00 05 A0 00 28 00 08 C0 FE FF FF 01 00 05 A0 00 28 00 08 C0 4E \par
+   ID1: Retry Address: 0x08002800\par
+   Total Hex Length: 21504\par
+Step6 - Bank Close\par
+   PC_CheckSUM - 0x65EB\par
+   Rx: FF FF 01 00 04 13 00 EB 65 6B 5F \par
+   ID1: INV_CheckSUM - 0x65EB\par
+   ID1: Check SUM CRC& Bank Close OK\par
+Step7 - Done\par
+   Rx: FF FF 01 00 02 14 00 93 00 \par
+   ID1: Done - Bank = 0\par
+   Rx: \par
+   Rx: \par
+   Rx: FF FF 01 00 04 04 02 0D 01 84 A0 \par
+End Time: 9:18:20\par
+Total Time: 125 S\par
+\par
+}
+ 

@@ -1,0 +1,45 @@
+{
+  "mcpServers": {
+    "pdf-tools": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "src.main"
+      ],
+      "cwd": "/Users/glenn/Desktop/procedures/mcp-servers/pdf-tools-mcp"
+    },
+    "sqlite": {
+      "command": "node",
+      "args": [
+        "/Users/glenn/Desktop/procedures/mcp-servers/mcp-sqlite/mcp-sqlite-server.js",
+        "/Users/glenn/Desktop/procedures/scripts/local_db/documents.db"
+      ]
+    },
+    "content-core": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "content_core.mcp.server"
+      ],
+      "env": {
+        "OPENAI_API_KEY": ""
+      }
+    },
+    "summarizer": {
+      "command": "node",
+      "args": [
+        "/Users/glenn/Desktop/procedures/mcp-servers/mcp-summarizer/dist/index.js"
+      ],
+      "env": {
+        "GOOGLE_API_KEY": ""
+      }
+    },
+    "faiss": {
+      "command": "python3",
+      "args": [
+        "-m",
+        "local_faiss_mcp"
+      ]
+    }
+  }
+}

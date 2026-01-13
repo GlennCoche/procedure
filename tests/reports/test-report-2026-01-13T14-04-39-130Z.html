@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rapport de Tests - 2026-01-13T14:04:37.491Z</title>
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f5f5f5; }
+    .container { max-width: 1200px; margin: 0 auto; background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    h1 { color: #333; margin-bottom: 20px; }
+    .summary { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+    .stat-card { padding: 20px; border-radius: 8px; text-align: center; }
+    .stat-card.total { background: #e3f2fd; }
+    .stat-card.passed { background: #e8f5e9; }
+    .stat-card.failed { background: #ffebee; }
+    .stat-card.skipped { background: #fff3e0; }
+    .stat-value { font-size: 32px; font-weight: bold; margin-bottom: 5px; }
+    .stat-label { color: #666; font-size: 14px; }
+    .suite { margin-bottom: 30px; border: 1px solid #ddd; border-radius: 8px; padding: 20px; }
+    .suite-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+    .suite-name { font-size: 20px; font-weight: bold; }
+    .test { padding: 10px; margin: 5px 0; border-radius: 4px; }
+    .test.passed { background: #e8f5e9; }
+    .test.failed { background: #ffebee; }
+    .test.skipped { background: #fff3e0; }
+    .test-name { font-weight: 500; }
+    .test-error { margin-top: 5px; color: #c62828; font-size: 12px; font-family: monospace; }
+    .bugs { margin-top: 30px; }
+    .bug { padding: 15px; margin: 10px 0; border-left: 4px solid; border-radius: 4px; }
+    .bug.critical { border-color: #c62828; background: #ffebee; }
+    .bug.major { border-color: #f57c00; background: #fff3e0; }
+    .bug.minor { border-color: #1976d2; background: #e3f2fd; }
+    .bug-id { font-weight: bold; margin-bottom: 5px; }
+    .bug-status { display: inline-block; padding: 3px 8px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+    .bug-status.detected { background: #ffebee; }
+    .bug-status.fixed { background: #e8f5e9; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Rapport de Tests</h1>
+    <p><strong>Environnement:</strong> local</p>
+    <p><strong>Date:</strong> 13/01/2026 15:04:37</p>
+    
+    <div class="summary">
+      <div class="stat-card total">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Total</div>
+      </div>
+      <div class="stat-card passed">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Réussis (0.0%)</div>
+      </div>
+      <div class="stat-card failed">
+        <div class="stat-value">2</div>
+        <div class="stat-label">Échoués (100.0%)</div>
+      </div>
+      <div class="stat-card skipped">
+        <div class="stat-value">0</div>
+        <div class="stat-label">Ignorés</div>
+      </div>
+    </div>
+    
+    
+      <div class="suite">
+        <div class="suite-header">
+          <div class="suite-name">executions</div>
+          <div>0 passés, 2 échoués, 0 ignorés</div>
+        </div>
+        
+          <div class="test failed">
+            <div class="test-name">API Tests for executions</div>
+            <div class="test-error">Command failed: cd /Users/glenn/Desktop/procedures/frontend && npx vitest run /Users/glenn/Desktop/procedures/tests/api/executions.test.ts --reporter=json
+</div>
+          </div>
+        
+          <div class="test failed">
+            <div class="test-name">E2E Tests for executions</div>
+            <div class="test-error">Command failed: cd /Users/glenn/Desktop/procedures/tests && npx playwright test e2e/executions.spec.ts --reporter=json
+Error: Cannot find module '@playwright/test'
+Require stack:
+- /Users/glenn/Desktop/procedures/tests/playwright.config.ts
+- /Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/transform/transform.js
+- /Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js
+- /Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/program.js
+- /Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/cli.js
+    at Module.<anonymous> (node:internal/modules/cjs/loader:1420:15)
+    at Module.resolveFilename [as _resolveFilename] (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/transform/transform.js:240:36)
+    at defaultResolveImpl (node:internal/modules/cjs/loader:1058:19)
+    at resolveForCJSWithHooks (node:internal/modules/cjs/loader:1063:22)
+    at Module._load (node:internal/modules/cjs/loader:1226:37)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:244:24)
+    at Module.require (node:internal/modules/cjs/loader:1503:12)
+    at require (node:internal/modules/helpers:152:16)
+    at Object.<anonymous> (/Users/glenn/Desktop/procedures/tests/playwright.config.ts:1:1)
+    at Module._compile (node:internal/modules/cjs/loader:1760:14)
+    at Module.newCompile2 (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/third_party/pirates.js:46:29)
+    at Object.<anonymous> (node:internal/modules/cjs/loader:1893:10)
+    at Object.newLoader2 [as .ts] (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/third_party/pirates.js:52:22)
+    at Module.load (node:internal/modules/cjs/loader:1480:32)
+    at Module._load (node:internal/modules/cjs/loader:1299:12)
+    at TracingChannel.traceSync (node:diagnostics_channel:328:14)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:244:24)
+    at Module.require (node:internal/modules/cjs/loader:1503:12)
+    at require (node:internal/modules/helpers:152:16)
+    at requireOrImport (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/transform/transform.js:218:18)
+    at loadUserConfig (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js:107:89)
+    at loadConfig (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js:119:28)
+    at loadConfigFromFile (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js:331:10)
+    at runTests (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/program.js:197:18)
+    at r.<anonymous> (/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/program.js:70:7) {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [
+    '/Users/glenn/Desktop/procedures/tests/playwright.config.ts',
+    '/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/transform/transform.js',
+    '/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/common/configLoader.js',
+    '/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/lib/program.js',
+    '/Users/glenn/.npm/_npx/e41f203b7505f1fb/node_modules/playwright/cli.js'
+  ]
+}
+</div>
+          </div>
+        
+      </div>
+    
+    
+    
+  </div>
+</body>
+</html>

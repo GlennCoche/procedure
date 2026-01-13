@@ -1,0 +1,19 @@
+{
+  "extends": "../frontend/tsconfig.json",
+  "compilerOptions": {
+    "types": ["vitest/globals", "@playwright/test", "node"],
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "noEmit": true
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx"
+  ],
+  "exclude": [
+    "node_modules",
+    "reports"
+  ]
+}
