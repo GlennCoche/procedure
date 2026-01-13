@@ -23,19 +23,80 @@ export default function StartupPage() {
 
   const checkStatus = async () => {
     try {
-      const response = await fetch("http://localhost:8000/api/startup/status")
+      // En production, utiliser les API routes Next.js
+      const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
+      const apiUrl = isProduction 
+        ? '/api/startup/status' 
+        : 'http://localhost:8000/api/startup/status'
+      
+      const response = await fetch(apiUrl)
+      if (!response.ok) {
+        // Si l'API route n'existe pas, vérifier les services Next.js directement
+        if (isProduction) {
+          const [proceduresRes, authRes] = await Promise.allSettled([
+            fetch('/api/procedures'),
+            fetch('/api/auth/me')
+          ])
+          
+          setStatus({
+            backend: {
+              running: proceduresRes.status === 'fulfilled' && proceduresRes.value.ok,
+              url: window.location.origin
+            },
+            frontend: {
+              running: authRes.status === 'fulfilled' && authRes.value.ok,
+              url: window.location.origin
+            }
+          })
+          return
+        }
+        throw new Error(`HTTP ${response.status}`)
+      }
       const data = await response.json()
       setStatus(data)
     } catch (error) {
       console.error("Erreur lors de la vérification:", error)
+      // En production, essayer de vérifier directement les API routes
+      if (typeof window !== 'undefined' && !window.location.hostname.includes('localhost')) {
+        try {
+          const [proceduresRes, authRes] = await Promise.allSettled([
+            fetch('/api/procedures'),
+            fetch('/api/auth/me')
+          ])
+          
+          setStatus({
+            backend: {
+              running: proceduresRes.status === 'fulfilled' && proceduresRes.value.ok,
+              url: window.location.origin
+            },
+            frontend: {
+              running: authRes.status === 'fulfilled' && authRes.value.ok,
+              url: window.location.origin
+            }
+          })
+        } catch (e) {
+          console.error("Erreur lors de la vérification directe:", e)
+        }
+      }
     }
   }
 
   const startServers = async () => {
     setLoading(true)
-    setLogs([...logs, "🚀 Démarrage des serveurs..."])
+    setLogs([...logs, "🚀 Vérification des services..."])
     
     try {
+      const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
+      
+      if (isProduction) {
+        // En production, les services Next.js sont déjà démarrés
+        setLogs([...logs, "✅ Services Next.js actifs"])
+        await checkStatus()
+        setLoading(false)
+        return
+      }
+      
+      // En développement, essayer de démarrer le backend FastAPI
       const response = await fetch("http://localhost:8000/api/startup/start", {
         method: "POST",
       })
@@ -65,6 +126,14 @@ export default function StartupPage() {
     setLogs([...logs, "🛑 Arrêt des serveurs..."])
     
     try {
+      const isProduction = typeof window !== 'undefined' && !window.location.hostname.includes('localhost')
+      
+      if (isProduction) {
+        setLogs([...logs, "ℹ️ En production, les services Next.js ne peuvent pas être arrêtés depuis cette page"])
+        setLoading(false)
+        return
+      }
+      
       await fetch("http://localhost:8000/api/startup/stop", {
         method: "POST",
       })
