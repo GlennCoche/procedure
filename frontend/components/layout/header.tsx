@@ -18,7 +18,9 @@ export function Header() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const response = await fetch("/api/auth/me")
+        const response = await fetch("/api/auth/me", {
+          credentials: "include",
+        })
         if (response.ok) {
           const data = await response.json()
           setUser(data.user)
@@ -33,7 +35,10 @@ export function Header() {
 
   const handleLogout = async () => {
     try {
-      await fetch("/api/auth/logout", { method: "POST" })
+      await fetch("/api/auth/logout", { 
+        method: "POST",
+        credentials: "include",
+      })
       router.push("/login")
     } catch (error) {
       console.error("Erreur déconnexion:", error)
