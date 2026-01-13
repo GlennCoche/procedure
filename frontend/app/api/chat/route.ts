@@ -12,8 +12,8 @@ function getOpenAIClient() {
   return new OpenAI({ apiKey })
 }
 
-// System prompt expert photovoltaïque
-const EXPERT_SYSTEM_PROMPT = `Tu es un EXPERT SENIOR en maintenance photovoltaïque avec 25 ans d'expérience terrain.
+// Prompts selon le mode
+const EXPERT_PROMPT_STANDARD = `Tu es un EXPERT SENIOR en maintenance photovoltaïque avec 25 ans d'expérience terrain.
 
 COMPORTEMENT OBLIGATOIRE:
 
@@ -25,7 +25,6 @@ COMPORTEMENT OBLIGATOIRE:
 2. BASE DE DONNÉES EN PRIORITÉ
    - Utilise TOUJOURS les procédures et tips de la base en priorité
    - Cite explicitement tes sources: "Selon la procédure 'Installation ABB TRIO'..."
-   - Indique clairement si l'info vient de la base documentaire ou de tes connaissances générales
 
 3. RÉPONSE STRUCTURÉE (format obligatoire)
    📋 DIAGNOSTIC
@@ -43,26 +42,33 @@ COMPORTEMENT OBLIGATOIRE:
    📚 RÉFÉRENCES
    Procédures et tips pertinents de la base (avec titres exacts).
 
-4. SI INFORMATION MANQUANTE
-   - Indique clairement que l'info n'est pas dans la base documentaire
-   - Donne une réponse basée sur tes connaissances d'expert
-   - Propose des pistes de recherche sur les sites constructeurs officiels
-
-5. STYLE EXPERT
-   - Langage technique précis mais accessible
-   - Valeurs numériques quand pertinent (tensions, courants, températures)
-   - Conseils terrain basés sur l'expérience pratique
-   - Mise en garde sécurité SYSTÉMATIQUE (risques électriques, travail en hauteur)
-
-6. SPÉCIFICITÉS FRANCE
+4. SPÉCIFICITÉS FRANCE
    - Connais les normes NF C 15-100, UTE C 15-712
    - Standards réseau France: 230/400V, 50Hz
-   - Références aux seuils de déclenchement standard France
 
 CONTEXTE TECHNIQUE DISPONIBLE:
 {context}
 
 Réponds en français, de manière professionnelle mais accessible.`
+
+const EXPERT_PROMPT_CONCISE = `Tu es un EXPERT SENIOR en maintenance photovoltaïque. Réponds de manière CONCISE et PRÉCISE.
+
+RÈGLES STRICTES:
+1. Réponses COURTES: 3-5 phrases maximum par section
+2. Va DROIT AU BUT: pas de préambule, pas de redondance
+3. POSE DES QUESTIONS si besoin de précisions (max 2 questions ciblées)
+4. Format bullet points quand possible
+5. Cite uniquement les références essentielles
+
+FORMAT DE RÉPONSE:
+• DIAGNOSTIC: 1-2 phrases
+• SOLUTION: Étapes numérotées, concises
+• ⚠️ SÉCURITÉ: Points critiques uniquement
+• ❓ QUESTIONS: Si besoin de précisions
+
+{context}
+
+Réponds en français. Sois direct et efficace.`
 
 export async function POST(request: NextRequest) {
   const user = await getCurrentUser()
@@ -71,20 +77,24 @@ export async function POST(request: NextRequest) {
   }
 
   try {
-    const { message, context } = await request.json()
+    const { message, context, settings } = await request.json()
 
     if (!message) {
       return new Response('Message requis', { status: 400 })
     }
 
-    // Récupérer l'historique des messages (augmenté à 15)
+    // Paramètres de configuration
+    const conciseMode = settings?.concise ?? false
+    const dualMode = settings?.dualResponse ?? false
+
+    // Récupérer l'historique des messages
     const history = await db.chatMessage.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'desc' },
-      take: 15,
+      take: 10,
     })
 
-    // AUTO-LEARNING: Récupérer les réponses bien notées pour améliorer les futures réponses
+    // AUTO-LEARNING: Récupérer les réponses bien notées
     let learningContext = ''
     try {
       const positiveExamples = await db.messageRating.findMany({
@@ -93,106 +103,62 @@ export async function POST(request: NextRequest) {
           message: { userId: user.id },
         },
         include: {
-          message: {
-            select: { message: true, response: true },
-          },
-        },
-        orderBy: { createdAt: 'desc' },
-        take: 5,
-      })
-
-      if (positiveExamples.length > 0) {
-        learningContext = '\n\n📊 EXEMPLES DE RÉPONSES APPRÉCIÉES PAR L\'UTILISATEUR:\n'
-        for (const ex of positiveExamples) {
-          if (ex.message.response) {
-            learningContext += `\nQ: "${ex.message.message.slice(0, 100)}..."\n`
-            learningContext += `Style apprécié: ${ex.message.response.slice(0, 200)}...\n`
-          }
-        }
-        learningContext += '\n→ Inspire-toi de ce style et de cette approche pour tes réponses.\n'
-      }
-
-      // Récupérer les patterns de réponses mal notées à éviter
-      const negativeExamples = await db.messageRating.findMany({
-        where: {
-          rating: 'negative',
-          message: { userId: user.id },
-        },
-        include: {
-          message: {
-            select: { message: true, response: true },
-          },
+          message: { select: { message: true, response: true } },
         },
         orderBy: { createdAt: 'desc' },
         take: 3,
       })
 
-      if (negativeExamples.length > 0) {
-        learningContext += '\n⚠️ TYPES DE RÉPONSES À ÉVITER (mal notées):\n'
-        for (const ex of negativeExamples) {
+      if (positiveExamples.length > 0) {
+        learningContext = '\n\n📊 STYLE APPRÉCIÉ:\n'
+        for (const ex of positiveExamples) {
           if (ex.message.response) {
-            learningContext += `- Question: "${ex.message.message.slice(0, 50)}..." → Réponse non appréciée\n`
+            learningContext += `• "${ex.message.response.slice(0, 150)}..."\n`
           }
         }
-        learningContext += '\n→ Adapte ton approche pour ce type de questions.\n'
       }
-    } catch (error) {
-      console.warn('Erreur récupération auto-learning:', error)
+    } catch {
+      // Table ratings n'existe pas encore
     }
 
     // Construire le contexte depuis la base de données
     let contextInfo = ''
-    const foundProcedures: string[] = []
-    const foundTips: string[] = []
-
-    // Recherche par mots-clés dans les procédures et tips
     try {
       const keywords = message.toLowerCase().split(/\s+/).filter((w: string) => w.length > 3).slice(0, 5)
       
       if (keywords.length > 0) {
-        // Recherche dans les procédures
         const procedures = await db.procedure.findMany({
           where: {
             OR: keywords.flatMap((keyword: string) => [
               { title: { contains: keyword, mode: 'insensitive' as const } },
               { description: { contains: keyword, mode: 'insensitive' as const } },
-              { tags: { contains: keyword, mode: 'insensitive' as const } },
             ])
           },
           include: { steps: { orderBy: { order: 'asc' } } },
-          take: 5
+          take: 3
         })
 
         if (procedures.length > 0) {
-          contextInfo += '\n📖 PROCÉDURES PERTINENTES:\n'
+          contextInfo += '\n📖 PROCÉDURES:\n'
           for (const proc of procedures) {
-            foundProcedures.push(proc.title)
-            contextInfo += `\n🔧 "${proc.title}"\n`
-            contextInfo += `   ${proc.description || ''}\n`
-            if (proc.steps.length > 0) {
-              contextInfo += `   Étapes: ${proc.steps.map(s => s.title).join(' → ')}\n`
-            }
+            contextInfo += `• "${proc.title}": ${proc.steps.map(s => s.title).join(' → ')}\n`
           }
         }
 
-        // Recherche dans les tips
         const tips = await db.tip.findMany({
           where: {
             OR: keywords.flatMap((keyword: string) => [
               { title: { contains: keyword, mode: 'insensitive' as const } },
               { content: { contains: keyword, mode: 'insensitive' as const } },
-              { tags: { contains: keyword, mode: 'insensitive' as const } },
             ])
           },
-          take: 5
+          take: 3
         })
 
         if (tips.length > 0) {
-          contextInfo += '\n💡 TIPS PERTINENTS:\n'
+          contextInfo += '\n💡 TIPS:\n'
           for (const tip of tips) {
-            foundTips.push(tip.title)
-            contextInfo += `\n"${tip.title}" (${tip.category || 'Général'})\n`
-            contextInfo += `   ${tip.content.slice(0, 300)}\n`
+            contextInfo += `• "${tip.title}": ${tip.content.slice(0, 100)}...\n`
           }
         }
       }
@@ -200,67 +166,78 @@ export async function POST(request: NextRequest) {
       console.warn('Recherche par mots-clés échouée:', error)
     }
 
-    // Ajouter le contexte de la procédure si disponible
-    if (context?.procedure_id) {
-      const procedure = await db.procedure.findUnique({
-        where: { id: context.procedure_id },
-        include: {
-          steps: {
-            orderBy: { order: 'asc' },
-          },
-        },
-      })
-
-      if (procedure) {
-        contextInfo += `\n\n📋 CONTEXTE PROCÉDURE EN COURS: "${procedure.title}"\n`
-        contextInfo += `Description: ${procedure.description || 'Non spécifiée'}\n`
-        contextInfo += `Étapes:\n${procedure.steps.map((s, i) => `  ${i + 1}. ${s.title}: ${s.description || s.instructions || ''}`).join('\n')}\n`
-      }
+    if (!contextInfo) {
+      contextInfo = '\n⚠️ Aucune doc trouvée. Utilise tes connaissances expert.\n'
     }
 
-    // Ajouter résumé des références trouvées
-    if (foundProcedures.length > 0 || foundTips.length > 0) {
-      contextInfo += `\n📚 RÉFÉRENCES DISPONIBLES:\n`
-      if (foundProcedures.length > 0) {
-        contextInfo += `- Procédures: ${foundProcedures.join(', ')}\n`
-      }
-      if (foundTips.length > 0) {
-        contextInfo += `- Tips: ${foundTips.join(', ')}\n`
-      }
-    } else {
-      contextInfo += '\n⚠️ Aucune documentation spécifique trouvée dans la base. Utilise tes connaissances d\'expert.\n'
-    }
-
-    // Construire le message système avec le contexte et l'auto-learning
     const fullContext = contextInfo + learningContext
-    const systemMessage = EXPERT_SYSTEM_PROMPT.replace('{context}', fullContext)
+    const basePrompt = conciseMode ? EXPERT_PROMPT_CONCISE : EXPERT_PROMPT_STANDARD
+    const systemMessage = basePrompt.replace('{context}', fullContext)
 
     // Construire les messages pour OpenAI
-    const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
-      {
-        role: 'system',
-        content: systemMessage,
-      },
+    const openaiMessages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
+      { role: 'system', content: systemMessage },
       ...history
         .reverse()
         .filter((msg) => msg.message && msg.response)
+        .slice(-6)
         .flatMap((msg) => [
-          {
-            role: 'user' as const,
-            content: msg.message,
-          },
-          {
-            role: 'assistant' as const,
-            content: msg.response!,
-          },
+          { role: 'user' as const, content: msg.message },
+          { role: 'assistant' as const, content: msg.response! },
         ]),
-      {
-        role: 'user',
-        content: message,
-      },
+      { role: 'user', content: message },
     ]
 
-    // Sauvegarder le message utilisateur
+    const openai = getOpenAIClient()
+
+    // MODE DUAL: Générer 2 réponses alternatives
+    if (dualMode) {
+      const [response1, response2] = await Promise.all([
+        openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: openaiMessages,
+          temperature: 0.3,
+          max_tokens: conciseMode ? 500 : 1500,
+        }),
+        openai.chat.completions.create({
+          model: 'gpt-4o-mini',
+          messages: [
+            ...openaiMessages.slice(0, -1),
+            { 
+              role: 'user', 
+              content: message + '\n\n[Propose une approche ALTERNATIVE différente de la première qui pourrait venir à l\'esprit]' 
+            }
+          ],
+          temperature: 0.7,
+          max_tokens: conciseMode ? 500 : 1500,
+        }),
+      ])
+
+      const content1 = response1.choices[0]?.message?.content || ''
+      const content2 = response2.choices[0]?.message?.content || ''
+
+      // Sauvegarder le message (sans réponse pour l'instant)
+      const chatMessage = await db.chatMessage.create({
+        data: {
+          userId: user.id,
+          message,
+          context: JSON.stringify({ ...context, dualMode: true }),
+        },
+      })
+
+      return new Response(JSON.stringify({
+        messageId: chatMessage.id,
+        dualMode: true,
+        responses: [
+          { id: 'A', content: content1, label: 'Réponse A - Approche standard' },
+          { id: 'B', content: content2, label: 'Réponse B - Approche alternative' },
+        ]
+      }), {
+        headers: { 'Content-Type': 'application/json' },
+      })
+    }
+
+    // MODE STANDARD: Streaming
     const chatMessage = await db.chatMessage.create({
       data: {
         userId: user.id,
@@ -269,23 +246,19 @@ export async function POST(request: NextRequest) {
       },
     })
 
-    // Appeler OpenAI avec streaming (température légèrement réduite pour plus de précision)
-    const openai = getOpenAIClient()
     const completion = await openai.chat.completions.create({
       model: 'gpt-4o-mini',
-      messages,
+      messages: openaiMessages,
       stream: true,
-      temperature: 0.5,
-      max_tokens: 2000,
+      temperature: conciseMode ? 0.3 : 0.5,
+      max_tokens: conciseMode ? 600 : 2000,
     })
 
-    // Créer un stream de réponse
     const stream = new ReadableStream({
       async start(controller) {
         let fullResponse = ''
 
         try {
-          // Envoyer l'ID du message au début du stream pour le feedback
           controller.enqueue(
             new TextEncoder().encode(`data: ${JSON.stringify({ messageId: chatMessage.id })}\n\n`)
           )
@@ -302,7 +275,6 @@ export async function POST(request: NextRequest) {
 
           controller.enqueue(new TextEncoder().encode('data: [DONE]\n\n'))
 
-          // Sauvegarder la réponse complète
           await db.chatMessage.update({
             where: { id: chatMessage.id },
             data: { response: fullResponse },
@@ -312,9 +284,7 @@ export async function POST(request: NextRequest) {
         } catch (error) {
           console.error('Erreur streaming:', error)
           controller.enqueue(
-            new TextEncoder().encode(
-              `data: ${JSON.stringify({ error: 'Erreur lors de la génération' })}\n\n`
-            )
+            new TextEncoder().encode(`data: ${JSON.stringify({ error: 'Erreur lors de la génération' })}\n\n`)
           )
           controller.close()
         }
@@ -330,6 +300,51 @@ export async function POST(request: NextRequest) {
     })
   } catch (error) {
     console.error('Erreur chat:', error)
+    return new Response('Erreur serveur', { status: 500 })
+  }
+}
+
+// Endpoint pour sélectionner une réponse en mode dual
+export async function PUT(request: NextRequest) {
+  const user = await getCurrentUser()
+  if (!user) {
+    return new Response('Non authentifié', { status: 401 })
+  }
+
+  try {
+    const { messageId, selectedResponse, selectedId } = await request.json()
+
+    if (!messageId || !selectedResponse) {
+      return new Response('Données manquantes', { status: 400 })
+    }
+
+    // Mettre à jour le message avec la réponse sélectionnée
+    await db.chatMessage.update({
+      where: { id: messageId },
+      data: { 
+        response: selectedResponse,
+        context: JSON.stringify({ selectedChoice: selectedId })
+      },
+    })
+
+    // Enregistrer automatiquement un feedback positif pour la réponse choisie
+    try {
+      await db.messageRating.create({
+        data: {
+          messageId,
+          rating: 'positive',
+          feedback: `Réponse ${selectedId} sélectionnée`,
+        },
+      })
+    } catch {
+      // Table ratings n'existe pas encore
+    }
+
+    return new Response(JSON.stringify({ success: true }), {
+      headers: { 'Content-Type': 'application/json' },
+    })
+  } catch (error) {
+    console.error('Erreur sélection réponse:', error)
     return new Response('Erreur serveur', { status: 500 })
   }
 }

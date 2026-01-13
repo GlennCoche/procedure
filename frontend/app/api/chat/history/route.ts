@@ -18,28 +18,40 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') || '50')
     const offset = parseInt(searchParams.get('offset') || '0')
 
-    // Récupérer les messages avec leurs ratings
+    // Récupérer les messages (sans ratings pour éviter les erreurs si table n'existe pas)
     const messages = await db.chatMessage.findMany({
       where: { userId: user.id },
       orderBy: { createdAt: 'asc' },
       skip: offset,
       take: limit,
-      include: {
-        ratings: {
-          select: {
-            id: true,
-            rating: true,
-            feedback: true,
-            createdAt: true,
-          },
-        },
-      },
     })
 
     // Compter le total de messages
     const total = await db.chatMessage.count({
       where: { userId: user.id },
     })
+
+    // Essayer de récupérer les ratings séparément (si la table existe)
+    let ratingsMap: Record<number, { rating: string; feedback: string | null }> = {}
+    try {
+      const ratings = await db.messageRating.findMany({
+        where: {
+          messageId: { in: messages.map(m => m.id) }
+        },
+        select: {
+          messageId: true,
+          rating: true,
+          feedback: true,
+        }
+      })
+      ratingsMap = ratings.reduce((acc, r) => {
+        acc[r.messageId] = { rating: r.rating, feedback: r.feedback }
+        return acc
+      }, {} as Record<number, { rating: string; feedback: string | null }>)
+    } catch {
+      // Table ratings n'existe pas encore, on continue sans
+      console.log('Table message_ratings non disponible, chargement sans ratings')
+    }
 
     return NextResponse.json({
       messages: messages.map((msg) => ({
@@ -48,15 +60,18 @@ export async function GET(request: NextRequest) {
         response: msg.response,
         context: msg.context ? JSON.parse(msg.context) : null,
         createdAt: msg.createdAt,
-        rating: msg.ratings?.[0]?.rating || null,
-        feedback: msg.ratings?.[0]?.feedback || null,
+        rating: ratingsMap[msg.id]?.rating || null,
+        feedback: ratingsMap[msg.id]?.feedback || null,
       })),
       total,
       hasMore: offset + messages.length < total,
     })
   } catch (error) {
     console.error('Erreur récupération historique:', error)
-    return new Response('Erreur serveur', { status: 500 })
+    return new Response(JSON.stringify({ error: 'Erreur serveur', details: String(error) }), { 
+      status: 500,
+      headers: { 'Content-Type': 'application/json' }
+    })
   }
 }
 
