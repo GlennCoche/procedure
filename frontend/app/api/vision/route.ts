@@ -67,7 +67,7 @@ export async function POST(request: NextRequest) {
 
     const suggestedProcedures = await db.procedure.findMany({
       where: {
-        isActive: 1, // SQLite: 1, PostgreSQL: true
+        isActive: true,
         OR: [
           ...keywords.map((keyword) => ({
             title: {

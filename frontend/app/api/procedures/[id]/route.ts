@@ -88,7 +88,7 @@ export async function PUT(
         category: body.category,
         tags: body.tags ? JSON.stringify(body.tags) : null,
         flowchartData: body.flowchart_data ? JSON.stringify(body.flowchart_data) : null,
-        isActive: body.is_active !== undefined ? (body.is_active ? 1 : 0) : existingProcedure.isActive,
+        isActive: body.is_active !== undefined ? Boolean(body.is_active) : existingProcedure.isActive,
       },
       include: {
         steps: {
@@ -173,7 +173,7 @@ export async function DELETE(
     // Soft delete: marquer comme inactive
     await db.procedure.update({
       where: { id: parseInt(params.id) },
-      data: { isActive: 0 }, // SQLite: 0, PostgreSQL: false
+      data: { isActive: false },
     })
 
     return NextResponse.json({ success: true })

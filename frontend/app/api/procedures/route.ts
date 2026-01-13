@@ -80,7 +80,7 @@ export async function POST(request: NextRequest) {
         description: body.description,
         category: body.category,
         tags: body.tags ? JSON.stringify(body.tags) : null,
-        isActive: 1, // SQLite: 1 (true), PostgreSQL: true (automatique)
+        isActive: true,
         createdById: user.id,
         flowchartData: body.flowchart_data ? JSON.stringify(body.flowchart_data) : null,
         steps: {
