@@ -1,0 +1,19 @@
+[
+  {
+    "id": 2,
+    "file_path": "/Users/glenn/Desktop/procedures/docs/ABB/MES TRIO27.6.pdf",
+    "file_name": "MES TRIO27.6.pdf",
+    "brand": "ABB",
+    "file_type": "pdf",
+    "file_size": 400929,
+    "status": "extracted",
+    "extraction_data": "{\"content_length\": 1720, \"title\": \"MES TRIO27.6.pdf\", \"topics\": [\"Réglages langue\", \"Câblage COM\", \"Aurora manager\", \"CosPhi\", \"Adresse modbus\", \"Seuil de tension\"]}",
+    "analysis_data": null,
+    "structured_data": null,
+    "enriched_data": null,
+    "validation_notes": null,
+    "error_message": null,
+    "created_at": "2026-01-13 21:54:13",
+    "updated_at": "2026-01-13 21:54:13"
+  }
+]
