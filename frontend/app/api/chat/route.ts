@@ -84,6 +84,62 @@ export async function POST(request: NextRequest) {
       take: 15,
     })
 
+    // AUTO-LEARNING: Récupérer les réponses bien notées pour améliorer les futures réponses
+    let learningContext = ''
+    try {
+      const positiveExamples = await db.messageRating.findMany({
+        where: {
+          rating: 'positive',
+          message: { userId: user.id },
+        },
+        include: {
+          message: {
+            select: { message: true, response: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 5,
+      })
+
+      if (positiveExamples.length > 0) {
+        learningContext = '\n\n📊 EXEMPLES DE RÉPONSES APPRÉCIÉES PAR L\'UTILISATEUR:\n'
+        for (const ex of positiveExamples) {
+          if (ex.message.response) {
+            learningContext += `\nQ: "${ex.message.message.slice(0, 100)}..."\n`
+            learningContext += `Style apprécié: ${ex.message.response.slice(0, 200)}...\n`
+          }
+        }
+        learningContext += '\n→ Inspire-toi de ce style et de cette approche pour tes réponses.\n'
+      }
+
+      // Récupérer les patterns de réponses mal notées à éviter
+      const negativeExamples = await db.messageRating.findMany({
+        where: {
+          rating: 'negative',
+          message: { userId: user.id },
+        },
+        include: {
+          message: {
+            select: { message: true, response: true },
+          },
+        },
+        orderBy: { createdAt: 'desc' },
+        take: 3,
+      })
+
+      if (negativeExamples.length > 0) {
+        learningContext += '\n⚠️ TYPES DE RÉPONSES À ÉVITER (mal notées):\n'
+        for (const ex of negativeExamples) {
+          if (ex.message.response) {
+            learningContext += `- Question: "${ex.message.message.slice(0, 50)}..." → Réponse non appréciée\n`
+          }
+        }
+        learningContext += '\n→ Adapte ton approche pour ce type de questions.\n'
+      }
+    } catch (error) {
+      console.warn('Erreur récupération auto-learning:', error)
+    }
+
     // Construire le contexte depuis la base de données
     let contextInfo = ''
     const foundProcedures: string[] = []
@@ -175,8 +231,9 @@ export async function POST(request: NextRequest) {
       contextInfo += '\n⚠️ Aucune documentation spécifique trouvée dans la base. Utilise tes connaissances d\'expert.\n'
     }
 
-    // Construire le message système avec le contexte
-    const systemMessage = EXPERT_SYSTEM_PROMPT.replace('{context}', contextInfo)
+    // Construire le message système avec le contexte et l'auto-learning
+    const fullContext = contextInfo + learningContext
+    const systemMessage = EXPERT_SYSTEM_PROMPT.replace('{context}', fullContext)
 
     // Construire les messages pour OpenAI
     const messages: OpenAI.Chat.Completions.ChatCompletionMessageParam[] = [
@@ -228,6 +285,11 @@ export async function POST(request: NextRequest) {
         let fullResponse = ''
 
         try {
+          // Envoyer l'ID du message au début du stream pour le feedback
+          controller.enqueue(
+            new TextEncoder().encode(`data: ${JSON.stringify({ messageId: chatMessage.id })}\n\n`)
+          )
+
           for await (const chunk of completion) {
             const content = chunk.choices[0]?.delta?.content || ''
             if (content) {

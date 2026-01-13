@@ -143,10 +143,25 @@ model ChatMessage {
   createdAt DateTime  @default(now()) @map("created_at") @db.Timestamptz(6)
 
   user      User      @relation(fields: [userId], references: [id])
+  ratings   MessageRating[]
 
   @@index([userId])
   @@index([createdAt])
   @@map("chat_messages")
+}
+
+model MessageRating {
+  id            Int         @id @default(autoincrement())
+  messageId     Int         @map("message_id")
+  rating        String      @db.VarChar(10) // 'positive' | 'negative'
+  feedback      String?     @db.Text
+  createdAt     DateTime    @default(now()) @map("created_at") @db.Timestamptz(6)
+
+  message       ChatMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+
+  @@index([messageId])
+  @@index([rating])
+  @@map("message_ratings")
 }
 
 model DocumentEmbedding {

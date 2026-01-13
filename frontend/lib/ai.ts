@@ -22,8 +22,8 @@ export async function sendChatMessage(
 export async function sendChatMessageStream(
   message: string,
   context: ChatContext | undefined,
-  onChunk: (chunk: string) => void
-): Promise<void> {
+  onChunk: (chunk: string, messageId?: number) => void
+): Promise<number | undefined> {
   const response = await fetch("/api/chat", {
     method: "POST",
     headers: {
@@ -43,6 +43,7 @@ export async function sendChatMessageStream(
 
   const reader = response.body.getReader()
   const decoder = new TextDecoder()
+  let messageId: number | undefined
 
   while (true) {
     const { done, value } = await reader.read()
@@ -57,8 +58,13 @@ export async function sendChatMessageStream(
         if (data === "[DONE]") continue
         try {
           const parsed = JSON.parse(data)
+          // Capturer l'ID du message pour le feedback
+          if (parsed.messageId) {
+            messageId = parsed.messageId
+            onChunk("", messageId)
+          }
           if (parsed.content) {
-            onChunk(parsed.content)
+            onChunk(parsed.content, messageId)
           }
         } catch {
           // Ignore parse errors
@@ -66,4 +72,6 @@ export async function sendChatMessageStream(
       }
     }
   }
+
+  return messageId
 }
