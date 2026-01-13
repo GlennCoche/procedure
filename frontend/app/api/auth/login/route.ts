@@ -66,10 +66,26 @@ export async function POST(request: NextRequest) {
       message: error?.message,
       stack: error?.stack,
       name: error?.name,
+      code: error?.code,
     })
-    return NextResponse.json(
-      { error: 'Erreur serveur', details: process.env.NODE_ENV === 'development' ? error?.message : undefined },
-      { status: 500 }
-    )
+    
+    // Retourner plus de détails en développement
+    const errorDetails: any = {
+      error: 'Erreur serveur',
+    }
+    
+    if (process.env.NODE_ENV === 'development') {
+      errorDetails.details = error?.message
+      errorDetails.stack = error?.stack
+    } else {
+      // En production, retourner un code d'erreur spécifique si possible
+      if (error?.code === 'P1001') {
+        errorDetails.details = 'Impossible de se connecter à la base de données'
+      } else if (error?.message?.includes('DATABASE_URL')) {
+        errorDetails.details = 'Configuration de la base de données manquante'
+      }
+    }
+    
+    return NextResponse.json(errorDetails, { status: 500 })
   }
 }

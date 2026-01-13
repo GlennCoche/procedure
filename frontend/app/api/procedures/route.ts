@@ -16,8 +16,8 @@ export async function GET(request: NextRequest) {
     const category = searchParams.get('category')
 
     // Construire la requête
-    // SQLite utilise 1/0, PostgreSQL utilise true/false - Prisma gère la conversion
-    const where: any = { isActive: 1 }
+    // PostgreSQL utilise true/false pour les booléens
+    const where: any = { isActive: true }
     if (category) {
       where.category = category
     }
