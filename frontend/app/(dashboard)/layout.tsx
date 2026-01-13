@@ -1,26 +1,47 @@
 "use client"
 
-import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { Sidebar } from "@/components/layout/sidebar"
 import { Header } from "@/components/layout/header"
+
+interface User {
+  id: number
+  email: string
+  role: string
+}
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
-  const { data: session, status } = useSession()
   const router = useRouter()
+  const [user, setUser] = useState<User | null>(null)
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login")
+    const checkAuth = async () => {
+      try {
+        const response = await fetch("/api/auth/me")
+        if (response.ok) {
+          const data = await response.json()
+          setUser(data.user)
+        } else {
+          router.push("/login")
+        }
+      } catch (error) {
+        console.error("Erreur vérification auth:", error)
+        router.push("/login")
+      } finally {
+        setLoading(false)
+      }
     }
-  }, [status, router])
 
-  if (status === "loading") {
+    checkAuth()
+  }, [router])
+
+  if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -28,7 +49,7 @@ export default function DashboardLayout({
     )
   }
 
-  if (!session) {
+  if (!user) {
     return null
   }
 

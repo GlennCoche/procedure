@@ -1,20 +1,42 @@
 "use client"
 
-import { useSession } from "next-auth/react"
+import { useEffect, useState } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { FileText, MessageSquare, Lightbulb, Camera } from "lucide-react"
 
+interface User {
+  id: number
+  email: string
+  role: string
+}
+
 export default function DashboardPage() {
-  const { data: session } = useSession()
+  const [user, setUser] = useState<User | null>(null)
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const response = await fetch("/api/auth/me")
+        if (response.ok) {
+          const data = await response.json()
+          setUser(data.user)
+        }
+      } catch (error) {
+        console.error("Erreur récupération user:", error)
+      }
+    }
+
+    fetchUser()
+  }, [])
 
   return (
     <div className="space-y-6">
       <div>
         <h1 className="text-3xl font-bold">Tableau de bord</h1>
         <p className="text-muted-foreground mt-2">
-          Bienvenue, {session?.user?.email}
+          Bienvenue, {user?.email || "..."}
         </p>
       </div>
 
