@@ -1,5 +1,20 @@
-# Dépendances optionnelles pour l'import de données depuis PDF
+# Dépendances pour l'import et le traitement de documents PDF
 # Installer avec: pip install -r scripts/requirements_import.txt
 
-PyPDF2==3.0.1
-pdfplumber==0.10.3
+# Extraction PDF
+pymupdf>=1.23.0
+pdfplumber>=0.10.3
+PyPDF2>=3.0.1
+
+# Traitement d'images
+Pillow>=10.0.0
+
+# Client HTTP pour Ollama
+requests>=2.31.0
+
+# LangChain + Supabase
+langchain
+supabase
+
+# Utilitaires
+python-dotenv>=1.0.0

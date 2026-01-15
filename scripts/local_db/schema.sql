@@ -63,9 +63,41 @@ CREATE TABLE IF NOT EXISTS local_tips (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- Table pour suivre les runs du pipeline séquentiel
+CREATE TABLE IF NOT EXISTS pipeline_runs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    source_dir TEXT NOT NULL,
+    staging_dir TEXT NOT NULL,
+    current_file TEXT,
+    status TEXT DEFAULT 'idle', -- idle, running, paused, error, completed
+    current_step TEXT,
+    last_step TEXT,
+    error_message TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- Table de logs structurés par étape
+CREATE TABLE IF NOT EXISTS pipeline_step_logs (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    run_id INTEGER REFERENCES pipeline_runs(id) ON DELETE CASCADE,
+    step TEXT NOT NULL,
+    status TEXT NOT NULL,
+    progress_current INTEGER DEFAULT 0,
+    progress_total INTEGER DEFAULT 0,
+    message TEXT,
+    error TEXT,
+    data_json TEXT,
+    cpu_percent REAL DEFAULT 0.0,
+    ram_mb REAL DEFAULT 0.0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Index pour améliorer les performances
 CREATE INDEX IF NOT EXISTS idx_document_processing_status ON document_processing(status);
 CREATE INDEX IF NOT EXISTS idx_document_processing_brand ON document_processing(brand);
 CREATE INDEX IF NOT EXISTS idx_document_images_document_id ON document_images(document_id);
 CREATE INDEX IF NOT EXISTS idx_local_procedures_document_id ON local_procedures(document_id);
 CREATE INDEX IF NOT EXISTS idx_local_tips_document_id ON local_tips(document_id);
+CREATE INDEX IF NOT EXISTS idx_pipeline_runs_status ON pipeline_runs(status);
+CREATE INDEX IF NOT EXISTS idx_pipeline_step_logs_run_id ON pipeline_step_logs(run_id);
