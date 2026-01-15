@@ -8,11 +8,11 @@ from typing import Dict, List, Optional, Tuple
 
 import fitz  # PyMuPDF
 from langchain_community.chat_models import ChatOllama
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from langchain_core.messages import HumanMessage, SystemMessage
 
-from scripts.pipeline_models import ExtractionOutput
-from scripts.prompts.expert_prompts import EXPERT_ANALYSIS_PROMPT
+from pipeline_models import ExtractionOutput
+from prompts.expert_prompts import EXPERT_ANALYSIS_PROMPT
 
 logger = logging.getLogger(__name__)
 
