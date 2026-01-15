@@ -8,11 +8,11 @@ from typing import Dict, Optional
 
 import requests
 
-from scripts.langchain_extractor import extract_with_langchain
-from scripts.local_db.db_manager import LocalDBManager
-from scripts.pipeline_models import StepContext, StepProgress, StepResult, StepStatus
-from scripts.queue_manager import QueueManager
-from scripts.supabase_client import SupabaseStorageClient, SupabaseTableClient
+from langchain_extractor import extract_with_langchain
+from local_db.db_manager import LocalDBManager
+from pipeline_models import StepContext, StepProgress, StepResult, StepStatus
+from queue_manager import QueueManager
+from supabase_client import SupabaseStorageClient, SupabaseTableClient
 
 
 def _get_resources() -> Dict[str, float]:
