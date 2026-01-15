@@ -80,7 +80,6 @@ def extract_with_langchain(
         raise FileNotFoundError(f"PDF introuvable: {pdf_path}")
 
     pages = _extract_pages_text(pdf_path)
-    doc_text = _build_document_text(pages)
 
     parser = PydanticOutputParser(pydantic_object=ExtractionOutput)
     format_instructions = parser.get_format_instructions()
@@ -99,12 +98,6 @@ def extract_with_langchain(
     )
     expert_prompt = EXPERT_ANALYSIS_PROMPT.format(**context)
 
-    user_prompt = (
-        f"{expert_prompt}\n\n"
-        f"CONTENU DU DOCUMENT (avec pages):\n{doc_text}\n\n"
-        f"{format_instructions}"
-    )
-
     ollama_url = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
     ollama_model = model or os.getenv("OLLAMA_MODEL", "mistral")
 
@@ -114,19 +107,45 @@ def extract_with_langchain(
         temperature=temperature,
     )
 
-    response = llm.invoke(
-        [
-            SystemMessage(content=system_prompt),
-            HumanMessage(content=user_prompt),
-        ]
-    )
-    raw_text = response.content if hasattr(response, "content") else str(response)
+    def _invoke(doc_text: str) -> ExtractionOutput:
+        user_prompt = (
+            f"{expert_prompt}\n\n"
+            f"CONTENU DU DOCUMENT (avec pages):\n{doc_text}\n\n"
+            f"{format_instructions}"
+        )
+        response = llm.invoke(
+            [
+                SystemMessage(content=system_prompt),
+                HumanMessage(content=user_prompt),
+            ]
+        )
+        raw_text = response.content if hasattr(response, "content") else str(response)
+        try:
+            return parser.parse(raw_text)
+        except Exception as exc:
+            logger.error("Erreur parsing LangChain: %s", exc)
+            logger.debug("Réponse brute: %s", raw_text[:2000])
+            raise
 
-    try:
-        parsed = parser.parse(raw_text)
-    except Exception as exc:
-        logger.error("Erreur parsing LangChain: %s", exc)
-        logger.debug("Réponse brute: %s", raw_text[:2000])
-        raise
+    max_chars = int(os.getenv("OLLAMA_MAX_CHARS", "50000"))
+    chunk_size = int(os.getenv("OLLAMA_PAGE_CHUNK", "6"))
+    full_text = _build_document_text(pages)
 
-    return _ensure_source_pages(parsed, pages)
+    if len(full_text) <= max_chars:
+        parsed = _invoke(full_text)
+        return _ensure_source_pages(parsed, pages)
+
+    logger.warning("Document long, extraction par chunks (%s pages)", chunk_size)
+    combined = ExtractionOutput()
+    for i in range(0, len(pages), chunk_size):
+        chunk_pages = pages[i : i + chunk_size]
+        chunk_text = _build_document_text(chunk_pages)
+        try:
+            chunk_output = _invoke(chunk_text)
+        except Exception:
+            continue
+        combined.procedures.extend(chunk_output.procedures)
+        combined.tips.extend(chunk_output.tips)
+        combined.settings.extend(chunk_output.settings)
+
+    return _ensure_source_pages(combined, pages)
