@@ -108,9 +108,9 @@ class PipelineRunner:
         return result
 
     def _load_last_step_data(self, step: str) -> Optional[Dict]:
-        if not self.db_manager or not self.context.run_id:
+        if not self.context.run_id:
             return None
-        rows = self.db_manager.execute_sql(
+        rows = self.db.execute_sql(
             "SELECT data_json FROM pipeline_step_logs WHERE run_id = ? AND step = ? ORDER BY id DESC LIMIT 1",
             (self.context.run_id, step),
         )
