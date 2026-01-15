@@ -107,6 +107,23 @@ class PipelineRunner:
         self._log_step(result)
         return result
 
+    def _load_last_step_data(self, step: str) -> Optional[Dict]:
+        if not self.db_manager or not self.context.run_id:
+            return None
+        rows = self.db_manager.execute_sql(
+            "SELECT data_json FROM pipeline_step_logs WHERE run_id = ? AND step = ? ORDER BY id DESC LIMIT 1",
+            (self.context.run_id, step),
+        )
+        if not rows:
+            return None
+        data_json = rows[0].get("data_json")
+        if not data_json:
+            return None
+        try:
+            return json.loads(data_json)
+        except Exception:
+            return None
+
     def inventory(self) -> StepResult:
         files = self.queue.inventory()
         progress = StepProgress(current=0, total=len(files))
@@ -208,6 +225,13 @@ class PipelineRunner:
 
     def import_supabase(self) -> StepResult:
         if not self.context.extraction_output:
+            if self.context.current_file:
+                pdf_path = Path(self.context.current_file)
+                export_path = Path(__file__).parent / "local_db" / "exports" / f"{pdf_path.stem}_extraction.json"
+                if export_path.exists():
+                    with open(export_path, "r", encoding="utf-8") as f:
+                        self.context.extraction_output = json.load(f)
+        if not self.context.extraction_output:
             return self._result(
                 step="import-supabase",
                 status=StepStatus.error,
@@ -230,6 +254,10 @@ class PipelineRunner:
 
         headers = {"Authorization": f"Bearer {token}", "Content-Type": "application/json"}
         storage_url = self.context.storage_url
+        if not storage_url:
+            last_upload = self._load_last_step_data("upload-storage")
+            if last_upload:
+                storage_url = last_upload.get("url")
         procedures_created = 0
         tips_created = 0
 
