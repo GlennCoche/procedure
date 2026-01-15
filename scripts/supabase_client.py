@@ -23,6 +23,7 @@ class SupabaseStorageClient:
         if not supabase_url or not supabase_key:
             raise ValueError("SUPABASE_URL et SUPABASE_SERVICE_KEY sont requis")
 
+        self.supabase_url = supabase_url.rstrip("/")
         self.client: Client = create_client(supabase_url, supabase_key)
         self.bucket = os.getenv("SUPABASE_PDF_BUCKET", "procedure-pdfs")
 
@@ -52,7 +53,7 @@ class SupabaseStorageClient:
             url = getattr(public_url, "public_url", None)
 
         if not url:
-            raise RuntimeError("Impossible d'obtenir l'URL publique du PDF")
+            url = f"{self.supabase_url}/storage/v1/object/public/{self.bucket}/{storage_path}"
 
         return {"url": url, "path": storage_path}
 
