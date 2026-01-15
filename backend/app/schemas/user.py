@@ -1,11 +1,11 @@
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 from typing import Optional
 from datetime import datetime
 from app.models.user import UserRole
 
 
 class UserBase(BaseModel):
-    email: EmailStr
+    email: str
     role: UserRole
 
 
@@ -14,7 +14,7 @@ class UserCreate(UserBase):
 
 
 class UserLogin(BaseModel):
-    email: EmailStr
+    email: str
     password: str
 
 
