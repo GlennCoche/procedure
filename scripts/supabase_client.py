@@ -6,10 +6,18 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from supabase import create_client, Client
+from dotenv import load_dotenv
+
+from pathlib import Path
 
 
 class SupabaseStorageClient:
     def __init__(self):
+        project_root = Path(__file__).resolve().parents[1]
+        backend_env = project_root / "backend" / ".env"
+        load_dotenv(backend_env, override=False)
+        load_dotenv(project_root / ".env", override=False)
+
         supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
         if not supabase_url or not supabase_key:
@@ -51,6 +59,11 @@ class SupabaseStorageClient:
 
 class SupabaseTableClient:
     def __init__(self):
+        project_root = Path(__file__).resolve().parents[1]
+        backend_env = project_root / "backend" / ".env"
+        load_dotenv(backend_env, override=False)
+        load_dotenv(project_root / ".env", override=False)
+
         supabase_url = os.getenv("SUPABASE_URL")
         supabase_key = os.getenv("SUPABASE_SERVICE_KEY")
         if not supabase_url or not supabase_key:
