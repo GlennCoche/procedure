@@ -31,6 +31,9 @@ class Settings(BaseSettings):
     VERCEL_PROJECT_ID: Optional[str] = None
     VERCEL_TEAM_ID: Optional[str] = None
     SUPABASE_PROJECT_ID: str = "mxxggubgvurldcneeter"
+
+    # OpenAI (Vision)
+    OPENAI_API_KEY: Optional[str] = None
     
     # Smart Router
     ENABLE_SMART_ROUTING: bool = True
