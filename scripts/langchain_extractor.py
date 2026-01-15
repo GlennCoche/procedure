@@ -80,6 +80,14 @@ def extract_with_langchain(
         raise FileNotFoundError(f"PDF introuvable: {pdf_path}")
 
     pages = _extract_pages_text(pdf_path)
+    max_pages_env = os.getenv("OLLAMA_MAX_PAGES")
+    if max_pages_env:
+        try:
+            max_pages = int(max_pages_env)
+            if max_pages > 0:
+                pages = pages[:max_pages]
+        except ValueError:
+            pass
 
     parser = PydanticOutputParser(pydantic_object=ExtractionOutput)
     format_instructions = parser.get_format_instructions()
